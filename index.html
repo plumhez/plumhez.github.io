@@ -1,11 +1,139 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Мой сайт</title>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PupsLand Chat</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
 </head>
+
 <body>
-    <h1>Привет, мир!</h1>
-    <p>Это мой первый сайт на GitHub Pages.</p>
+
+<div class="background"></div>
+
+<!-- ================= LOGIN ================= -->
+
+<div class="login" id="login">
+
+<div class="card">
+
+<div class="logo">
+🍏
+</div>
+
+<h1>PupsLand</h1>
+
+<p>
+Введите пароль для входа
+</p>
+
+<input
+id="password"
+type="password"
+placeholder="Пароль"
+autocomplete="off">
+
+<input
+id="nickname"
+type="text"
+placeholder="Псевдоним"
+style="display:none"
+maxlength="20"
+autocomplete="off">
+
+<button id="continue">
+
+Продолжить
+
+</button>
+
+<div id="error"></div>
+
+</div>
+
+</div>
+
+<!-- ================= CHAT ================= -->
+
+<div class="chat" id="chat">
+
+<header>
+
+<div class="left">
+
+<div class="apple"></div>
+
+<div>
+
+<h2>PupsLand Chat</h2>
+
+<span>
+
+Общий чат
+
+</span>
+
+</div>
+
+</div>
+
+<div class="right">
+
+<div class="online-dot"></div>
+
+<span id="onlineCount">
+
+1 онлайн
+
+</span>
+
+</div>
+
+</header>
+
+<main id="messages">
+
+<!-- сообщения -->
+
+</main>
+
+<footer>
+
+<div class="input">
+
+<input
+id="message"
+placeholder="Сообщение..."
+maxlength="500">
+
+<button id="send">
+
+<svg width="22" height="22" viewBox="0 0 24 24">
+
+<path
+fill="currentColor"
+d="M2 21L23 12L2 3L2 10L17 12L2 14Z"/>
+
+</svg>
+
+</button>
+
+</div>
+
+</footer>
+
+</div>
+
+<script src="script.js"></script>
+
 </body>
 </html>
