@@ -831,7 +831,7 @@
         const firebaseConfig = {
             apiKey: "AIzaSyDLbYzjQBqtjRAlR6-CZj2TZXJgb2Esz4M",
             authDomain: "plumhez.firebaseapp.com",
-            databaseURL: "https://plumhez-default-rtdb.europe-west1.firebasedatabase.app", // ← ИСПРАВЛЕНО!
+            databaseURL: "https://plumhez-default-rtdb.europe-west1.firebasedatabase.app",
             projectId: "plumhez",
             storageBucket: "plumhez.firebasestorage.app",
             messagingSenderId: "454691669371",
@@ -848,7 +848,6 @@
             database = firebase.database();
             console.log('🔥 Firebase подключена! Проект: plumhez');
 
-            // Проверяем соединение
             const connectedRef = firebase.database().ref('.info/connected');
             connectedRef.on('value', (snap) => {
                 if (snap.val() === true) {
@@ -1005,7 +1004,6 @@
                     addMessageToChat(data.user, data.text, data.timestamp, data.user === currentNickname);
                 });
 
-                // Создаём структуру чата если её нет
                 const chatRef = firebase.database().ref('chats/' + chatId);
                 chatRef.once('value', (snap) => {
                     if (!snap.exists()) {
@@ -1023,4 +1021,11 @@
             const div = document.createElement('div');
             div.className = `chat-message ${isOwn ? 'own' : 'other'}`;
 
-            const time = new Date(timestamp).toLocaleTimeString
+            const time = new Date(timestamp).toLocaleTimeString('ru-RU', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            div.innerHTML = `
+                <div class="msg-user">${user || 'Аноним'}</div>
+               
