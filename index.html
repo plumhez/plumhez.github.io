@@ -17,23 +17,38 @@
             padding: 0;
             box-sizing: border-box;
         }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            min-height: 100vh;
             background: #0a0a0a;
-            padding: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
+
+        /* ===== РАЗМЫТИЕ ФОНА ===== */
+        body.menu-open .glass-card {
+            filter: blur(8px);
+            pointer-events: none;
+            transition: filter 0.4s ease;
+        }
+
         body.menu-open::after {
             content: '';
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, 0.5);
             z-index: 9;
         }
+
+        /* ===== ГЛАВНАЯ КАРТОЧКА ===== */
         .glass-card {
             max-width: 600px;
             width: 100%;
@@ -45,7 +60,9 @@
             text-align: center;
             position: relative;
             z-index: 10;
+            transition: filter 0.4s ease;
         }
+
         .sticker-baby {
             font-size: 80px;
             display: block;
@@ -57,6 +74,7 @@
             100% { transform: translateY(0); }
             50% { transform: translateY(-8px); }
         }
+
         h1 {
             font-size: 2.8rem;
             font-weight: 800;
@@ -66,6 +84,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .user-badge {
             display: inline-block;
             background: rgba(255, 255, 255, 0.05);
@@ -79,6 +98,7 @@
         .user-badge span {
             color: #ccc;
         }
+
         .sub-tg {
             font-size: 0.8rem;
             color: #555;
@@ -97,6 +117,7 @@
         .sub-tg a:hover {
             color: #aaa;
         }
+
         .btn-chats {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -117,7 +138,7 @@
             transform: scale(1.02);
         }
 
-        /* МЕНЮ */
+        /* ===== БОКОВОЕ МЕНЮ ===== */
         .side-menu {
             position: fixed;
             top: 0;
@@ -138,6 +159,7 @@
         .side-menu.open {
             right: 0;
         }
+
         .menu-header {
             display: flex;
             justify-content: space-between;
@@ -163,6 +185,7 @@
             color: #aaa;
             transform: rotate(90deg);
         }
+
         .chat-list {
             display: flex;
             flex-direction: column;
@@ -212,6 +235,7 @@
             color: #484;
             background: rgba(80, 200, 80, 0.08);
         }
+
         .menu-footer {
             margin-top: 20px;
             padding-top: 18px;
@@ -226,32 +250,33 @@
             font-weight: 600;
         }
 
-        /* ЧАТ ОКНО */
+        /* ===== ОКНО ЧАТА (ПОЛНОЭКРАННЫЙ РЕЖИМ) ===== */
         .chat-window {
             position: fixed;
             top: 0;
-            right: -100%;
-            width: 100%;
-            max-width: 700px;
+            left: 0;
+            width: 100vw;
             height: 100vh;
             background: #0f0f0f;
             z-index: 1000;
-            transition: right 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
             display: flex;
             flex-direction: column;
-            border-left: 1px solid rgba(255, 255, 255, 0.05);
         }
         .chat-window.open {
-            right: 0;
+            transform: translateX(0);
         }
+
         .chat-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 18px 24px;
+            padding: 16px 24px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             background: #141414;
             flex-shrink: 0;
+            min-height: 68px;
         }
         .chat-header .chat-title {
             display: flex;
@@ -264,18 +289,47 @@
         .chat-header .chat-title span {
             font-size: 1.6rem;
         }
-        .chat-header .chat-close {
+
+        .chat-header .chat-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Кнопка "Чаты" в углу */
+        .btn-chats-mini {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #aaa;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+        .btn-chats-mini:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        .chat-close {
             background: none;
             border: none;
             font-size: 1.8rem;
             cursor: pointer;
             color: #555;
             transition: all 0.2s;
+            padding: 0 4px;
         }
-        .chat-header .chat-close:hover {
+        .chat-close:hover {
             color: #aaa;
             transform: rotate(90deg);
         }
+
         .chat-messages {
             flex: 1;
             overflow-y: auto;
@@ -319,6 +373,7 @@
             margin-top: 4px;
             text-align: right;
         }
+
         .chat-input-area {
             display: flex;
             gap: 12px;
@@ -366,12 +421,12 @@
             margin-top: 40px;
         }
 
-        /* МОДАЛКИ */
+        /* ===== МОДАЛКИ ===== */
         .password-modal,
         .nickname-modal {
             position: fixed;
             inset: 0;
-            z-index: 200;
+            z-index: 2000;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -504,6 +559,7 @@
             margin-bottom: 4px;
         }
 
+        /* ===== АДАПТИВ ===== */
         @media (max-width: 500px) {
             .glass-card {
                 padding: 36px 20px 32px;
@@ -527,9 +583,6 @@
             .sticker-baby {
                 font-size: 60px;
             }
-            .chat-window {
-                max-width: 100%;
-            }
             .chat-messages {
                 padding: 14px 16px;
             }
@@ -540,7 +593,18 @@
             .chat-input-area button {
                 width: 100%;
             }
+            .chat-header .chat-title {
+                font-size: 1rem;
+            }
+            .btn-chats-mini {
+                font-size: 0.75rem;
+                padding: 6px 14px;
+            }
+            .chat-close {
+                font-size: 1.4rem;
+            }
         }
+
         ::-webkit-scrollbar {
             width: 4px;
         }
@@ -552,6 +616,7 @@
 </head>
 <body>
 
+    <!-- ГЛАВНАЯ СТРАНИЦА -->
     <div class="glass-card" id="mainCard">
         <span class="sticker-baby">👶</span>
         <h1>Пупс чат</h1>
@@ -560,7 +625,7 @@
         <button class="btn-chats" id="openMenuBtn">💬 Чаты</button>
     </div>
 
-    <!-- МЕНЮ ЧАТОВ -->
+    <!-- БОКОВОЕ МЕНЮ ЧАТОВ -->
     <div class="side-menu" id="sideMenu">
         <div class="menu-header">
             <h2>💬 Чаты</h2>
@@ -570,13 +635,21 @@
         <div class="menu-footer">🔐 пароли — <a href="https://t.me/rcvpg" target="_blank">@rcvpg</a></div>
     </div>
 
-    <!-- ОКНО ЧАТА -->
+    <!-- ОКНО ЧАТА (ПОЛНОЭКРАННЫЙ) -->
     <div class="chat-window" id="chatWindow">
         <div class="chat-header">
-            <div class="chat-title"><span id="chatWindowEmoji">🌐</span> <span id="chatWindowTitle">Общий</span></div>
-            <button class="chat-close" id="chatCloseBtn">✕</button>
+            <div class="chat-title">
+                <span id="chatWindowEmoji">🌐</span>
+                <span id="chatWindowTitle">Общий</span>
+            </div>
+            <div class="chat-actions">
+                <button class="btn-chats-mini" id="openMenuFromChatBtn">📋 Чаты</button>
+                <button class="chat-close" id="chatCloseBtn">✕</button>
+            </div>
         </div>
-        <div class="chat-messages" id="chatMessages"><div class="empty-chat">💬 Сообщений пока нет</div></div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="empty-chat">💬 Сообщений пока нет</div>
+        </div>
         <div class="chat-input-area">
             <input type="text" id="chatInput" placeholder="Напишите сообщение..." maxlength="500" />
             <button id="chatSendBtn">➤ Отправить</button>
@@ -669,6 +742,7 @@
         const chatInput = document.getElementById('chatInput');
         const chatSendBtn = document.getElementById('chatSendBtn');
         const chatCloseBtn = document.getElementById('chatCloseBtn');
+        const openMenuFromChatBtn = document.getElementById('openMenuFromChatBtn');
 
         let pendingChatId = null;
 
@@ -807,7 +881,7 @@
             closeMenu();
         }
 
-        // ============ ДОБАВИТЬ СООБЩЕНИЕ В ЧАТ ============
+        // ============ ДОБАВИТЬ СООБЩЕНИЕ ============
         function addMessageToChat(user, text, timestamp, isOwn) {
             const div = document.createElement('div');
             div.className = `chat-message ${isOwn ? 'own' : 'other'}`;
@@ -878,7 +952,6 @@
                 showNicknameModal();
             }
 
-            // Кнопки
             setNickBtn.addEventListener('click', setNickname);
             nicknameInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') setNickname();
@@ -897,25 +970,4 @@
 
             openMenuBtn.addEventListener('click', openMenu);
             closeMenuBtn.addEventListener('click', closeMenu);
-
-            chatSendBtn.addEventListener('click', sendMessage);
-            chatInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') sendMessage();
-            });
-
-            chatCloseBtn.addEventListener('click', closeChat);
-
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    closeMenu();
-                    closeChat();
-                    hidePasswordModal();
-                }
-            });
-
-            renderChats();
-            console.log('🚀 Пупс чат готов!');
-        });
-    </script>
-</body>
-</html>
+            openMenuFromChatBtn.addEventListener('click', openMenu
