@@ -33,7 +33,6 @@
             position: relative;
         }
 
-        /* ===== РАЗМЫТИЕ ФОНА ===== */
         body.menu-open .glass-card {
             filter: blur(8px);
             pointer-events: none;
@@ -48,7 +47,6 @@
             z-index: 9;
         }
 
-        /* ===== ГЛАВНАЯ КАРТОЧКА ===== */
         .glass-card {
             max-width: 600px;
             width: 100%;
@@ -138,7 +136,6 @@
             transform: scale(1.02);
         }
 
-        /* ===== БОКОВОЕ МЕНЮ ===== */
         .side-menu {
             position: fixed;
             top: 0;
@@ -250,7 +247,6 @@
             font-weight: 600;
         }
 
-        /* ===== ОКНО ЧАТА (ПОЛНОЭКРАННЫЙ РЕЖИМ) ===== */
         .chat-window {
             position: fixed;
             top: 0;
@@ -296,7 +292,6 @@
             gap: 12px;
         }
 
-        /* Кнопка "Чаты" в углу */
         .btn-chats-mini {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -421,7 +416,6 @@
             margin-top: 40px;
         }
 
-        /* ===== МОДАЛКИ ===== */
         .password-modal,
         .nickname-modal {
             position: fixed;
@@ -559,7 +553,6 @@
             margin-bottom: 4px;
         }
 
-        /* ===== АДАПТИВ ===== */
         @media (max-width: 500px) {
             .glass-card {
                 padding: 36px 20px 32px;
@@ -616,7 +609,6 @@
 </head>
 <body>
 
-    <!-- ГЛАВНАЯ СТРАНИЦА -->
     <div class="glass-card" id="mainCard">
         <span class="sticker-baby">👶</span>
         <h1>Пупс чат</h1>
@@ -625,7 +617,6 @@
         <button class="btn-chats" id="openMenuBtn">💬 Чаты</button>
     </div>
 
-    <!-- БОКОВОЕ МЕНЮ ЧАТОВ -->
     <div class="side-menu" id="sideMenu">
         <div class="menu-header">
             <h2>💬 Чаты</h2>
@@ -635,7 +626,6 @@
         <div class="menu-footer">🔐 пароли — <a href="https://t.me/rcvpg" target="_blank">@rcvpg</a></div>
     </div>
 
-    <!-- ОКНО ЧАТА (ПОЛНОЭКРАННЫЙ) -->
     <div class="chat-window" id="chatWindow">
         <div class="chat-header">
             <div class="chat-title">
@@ -656,7 +646,6 @@
         </div>
     </div>
 
-    <!-- МОДАЛКА ПАРОЛЯ -->
     <div class="password-modal" id="passwordModal">
         <div class="password-modal-content">
             <span class="sticker-lock">🔐</span>
@@ -671,7 +660,6 @@
         </div>
     </div>
 
-    <!-- МОДАЛКА ПСЕВДОНИМА -->
     <div class="nickname-modal" id="nicknameModal">
         <div class="nickname-modal-content">
             <span class="sticker-baby-big">👶</span>
@@ -945,29 +933,58 @@
         }
 
         // ============ ИНИЦИАЛИЗАЦИЯ ============
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Пупс чат инициализация...');
+
+            // Псевдоним
             if (currentNickname) {
                 nicknameDisplay.textContent = currentNickname;
+                console.log('👤 Псевдоним загружен:', currentNickname);
             } else {
+                console.log('👤 Псевдоним не найден, показываем модалку');
                 showNicknameModal();
             }
 
+            // Кнопка сохранения псевдонима
             setNickBtn.addEventListener('click', setNickname);
-            nicknameInput.addEventListener('keydown', (e) => {
+            nicknameInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') setNickname();
             });
 
+            // Пароль
             passwordConfirm.addEventListener('click', tryPassword);
             passwordCancel.addEventListener('click', hidePasswordModal);
-            passwordInput.addEventListener('keydown', (e) => {
+            passwordInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') tryPassword();
                 if (e.key === 'Escape') hidePasswordModal();
             });
-
-            passwordModal.addEventListener('click', (e) => {
+            passwordModal.addEventListener('click', function(e) {
                 if (e.target === passwordModal) hidePasswordModal();
             });
 
-            openMenuBtn.addEventListener('click', openMenu);
+            // Открыть меню чатов (главная кнопка)
+            openMenuBtn.addEventListener('click', function() {
+                console.log('📋 Открываем меню чатов');
+                openMenu();
+            });
+
+            // Кнопка "Чаты" внутри чата
+            openMenuFromChatBtn.addEventListener('click', function() {
+                console.log('📋 Открываем меню из чата');
+                openMenu();
+            });
+
+            // Закрыть меню
             closeMenuBtn.addEventListener('click', closeMenu);
-            openMenuFromChatBtn.addEventListener('click', openMenu
+
+            // Закрыть чат
+            chatCloseBtn.addEventListener('click', closeChat);
+
+            // Отправить сообщение
+            chatSendBtn.addEventListener('click', sendMessage);
+            chatInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') sendMessage();
+            });
+
+            // ESC закрывает всё
+            document.addEventListener('keydown', function
