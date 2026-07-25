@@ -1,920 +1,821 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>PupsLand Chat</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Inter,sans-serif;
-}
-
-html,body{
-
-width:100%;
-height:100%;
-
-overflow:hidden;
-
-background:#f5f5f7;
-
-}
-
-body{
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-color:#1d1d1f;
-
-}
-
-body::before{
-
-content:"";
-
-position:fixed;
-
-inset:0;
-
-background:
-
-radial-gradient(circle at 20% 20%,rgba(0,122,255,.08),transparent 35%),
-
-radial-gradient(circle at 80% 10%,rgba(255,255,255,.9),transparent 40%),
-
-linear-gradient(#fafafa,#f3f3f5);
-
-z-index:-1;
-
-animation:bg 14s ease infinite;
-
-}
-
-@keyframes bg{
-
-0%{transform:scale(1)}
-
-50%{transform:scale(1.04)}
-
-100%{transform:scale(1)}
-
-}
-
-.login{
-
-position:fixed;
-
-inset:0;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-transition:.6s;
-
-}
-
-.card{
-
-width:430px;
-
-background:rgba(255,255,255,.82);
-
-backdrop-filter:blur(28px);
-
-border-radius:30px;
-
-padding:45px;
-
-box-shadow:
-
-0 25px 80px rgba(0,0,0,.08);
-
-animation:card .8s;
-
-}
-
-@keyframes card{
-
-from{
-
-opacity:0;
-
-transform:
-
-translateY(35px)
-
-scale(.95);
-
-}
-
-to{
-
-opacity:1;
-
-transform:
-
-translateY(0)
-
-scale(1);
-
-}
-
-}
-
-.logo{
-
-font-size:60px;
-
-text-align:center;
-
-margin-bottom:18px;
-
-}
-
-h1{
-
-text-align:center;
-
-font-size:34px;
-
-margin-bottom:10px;
-
-}
-
-.subtitle{
-
-text-align:center;
-
-color:#777;
-
-margin-bottom:35px;
-
-font-size:15px;
-
-}
-
-input{
-
-width:100%;
-
-height:58px;
-
-border:none;
-
-outline:none;
-
-background:#f2f2f2;
-
-border-radius:18px;
-
-padding:0 18px;
-
-font-size:16px;
-
-transition:.25s;
-
-}
-
-input:focus{
-
-background:white;
-
-box-shadow:
-
-0 0 0 4px rgba(0,122,255,.15);
-
-}
-
-button{
-
-width:100%;
-
-height:58px;
-
-margin-top:18px;
-
-border:none;
-
-border-radius:18px;
-
-background:#0071e3;
-
-color:white;
-
-font-size:17px;
-
-font-weight:600;
-
-cursor:pointer;
-
-transition:.25s;
-
-}
-
-button:hover{
-
-transform:translateY(-2px);
-
-box-shadow:
-
-0 15px 30px rgba(0,113,227,.25);
-
-}
-  .chat{
-
-position:fixed;
-
-inset:0;
-
-display:none;
-
-flex-direction:column;
-
-opacity:0;
-
-transition:.5s;
-
-background:#f5f5f7;
-
-}
-
-.chat.show{
-
-display:flex;
-
-opacity:1;
-
-}
-
-header{
-
-height:78px;
-
-background:rgba(255,255,255,.8);
-
-backdrop-filter:blur(30px);
-
-border-bottom:1px solid rgba(0,0,0,.06);
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-padding:0 28px;
-
-}
-
-.brand{
-
-display:flex;
-
-align-items:center;
-
-gap:15px;
-
-}
-
-.icon{
-
-width:46px;
-
-height:46px;
-
-border-radius:14px;
-
-background:white;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-font-size:22px;
-
-box-shadow:
-
-0 8px 20px rgba(0,0,0,.08);
-
-}
-
-.brand h2{
-
-font-size:21px;
-
-font-weight:700;
-
-}
-
-.brand p{
-
-font-size:13px;
-
-color:#777;
-
-margin-top:2px;
-
-}
-
-.online{
-
-font-size:14px;
-
-font-weight:600;
-
-color:#30d158;
-
-}
-
-.messages{
-
-flex:1;
-
-overflow-y:auto;
-
-padding:24px;
-
-display:flex;
-
-flex-direction:column;
-
-gap:15px;
-
-}
-
-.message{
-
-max-width:420px;
-
-padding:15px 18px;
-
-background:white;
-
-border-radius:22px;
-
-box-shadow:
-
-0 8px 18px rgba(0,0,0,.05);
-
-animation:msg .25s;
-
-word-break:break-word;
-
-}
-
-.message.self{
-
-margin-left:auto;
-
-background:#007aff;
-
-color:white;
-
-}
-
-.author{
-
-font-size:13px;
-
-font-weight:700;
-
-opacity:.7;
-
-margin-bottom:5px;
-
-}
-
-.time{
-
-font-size:11px;
-
-opacity:.55;
-
-margin-top:8px;
-
-}
-
-@keyframes msg{
-
-from{
-
-opacity:0;
-
-transform:
-
-translateY(20px)
-
-scale(.95);
-
-}
-
-to{
-
-opacity:1;
-
-transform:
-
-translateY(0)
-
-scale(1);
-
-}
-
-}
-
-.bottom{
-
-height:90px;
-
-display:flex;
-
-gap:15px;
-
-padding:18px;
-
-background:white;
-
-border-top:1px solid rgba(0,0,0,.05);
-
-}
-
-.bottom input{
-
-flex:1;
-
-height:54px;
-
-border:none;
-
-outline:none;
-
-background:#f2f2f2;
-
-border-radius:18px;
-
-padding:0 18px;
-
-font-size:16px;
-
-}
-
-.send{
-
-width:58px;
-
-height:54px;
-
-border:none;
-
-border-radius:18px;
-
-background:#007aff;
-
-color:white;
-
-font-size:22px;
-
-cursor:pointer;
-
-transition:.2s;
-
-}
-
-.send:hover{
-
-transform:scale(1.05);
-
-}
-
-::-webkit-scrollbar{
-
-width:8px;
-
-}
-
-::-webkit-scrollbar-thumb{
-
-background:#d0d0d0;
-
-border-radius:999px;
-
-}
-
-@media(max-width:700px){
-
-.card{
-
-width:92%;
-
-padding:32px;
-
-}
-
-header{
-
-padding:0 18px;
-
-}
-
-.messages{
-
-padding:16px;
-
-}
-
-.message{
-
-max-width:92%;
-
-}
-
-}
-
-</style>
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Пупс чат · главная</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, #f9eef7 0%, #f1d9e9 100%);
+            padding: 20px;
+            margin: 0;
+            position: relative;
+        }
+
+        body.menu-open::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: rgba(30, 10, 25, 0.3);
+            backdrop-filter: blur(3px);
+            z-index: 9;
+        }
+
+        .glass-card {
+            max-width: 700px;
+            width: 100%;
+            background: rgba(255, 245, 250, 0.7);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-radius: 58px;
+            padding: 48px 40px 44px;
+            box-shadow: 0 25px 45px -12px rgba(180, 90, 140, 0.25),
+                        0 2px 10px 0 rgba(255, 220, 240, 0.5),
+                        inset 0 1px 2px rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 230, 245, 0.5);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .pups-avatar {
+            width: 110px;
+            height: 110px;
+            background: radial-gradient(circle at 30% 28%, #ffe5f0, #fcc8dc);
+            border-radius: 50%;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 12px 24px -6px rgba(200, 100, 150, 0.3),
+                        inset 0 -4px 8px rgba(180, 70, 120, 0.1);
+            border: 3px solid #fff5fa;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .pups-avatar:hover {
+            transform: scale(1.04) rotate(-3deg);
+        }
+
+        .pups-avatar-inner {
+            font-size: 68px;
+            line-height: 1;
+            filter: drop-shadow(0 6px 8px rgba(160, 70, 110, 0.2));
+            letter-spacing: 2px;
+            transform: scaleX(-1);
+        }
+
+        h1 {
+            font-size: 3.3rem;
+            font-weight: 700;
+            color: #392b34;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+
+        .user-badge {
+            display: inline-block;
+            background: rgba(200, 150, 175, 0.2);
+            padding: 6px 20px;
+            border-radius: 40px;
+            font-size: 0.95rem;
+            color: #5a4050;
+            margin-top: 2px;
+            margin-bottom: 18px;
+            font-weight: 600;
+            backdrop-filter: blur(2px);
+        }
+
+        .user-badge span {
+            color: #7a4b66;
+        }
+
+        .sub-tg {
+            font-size: 0.9rem;
+            color: #9a7f8e;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            margin-top: 2px;
+            margin-bottom: 28px;
+            background: rgba(255, 245, 250, 0.4);
+            display: inline-block;
+            padding: 4px 18px;
+            border-radius: 40px;
+            backdrop-filter: blur(2px);
+        }
+
+        .sub-tg a {
+            color: #9a7f8e;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .sub-tg a:hover {
+            color: #6b4b5e;
+            text-decoration: underline;
+        }
+
+        .btn-chats {
+            background: #f0dce8;
+            border: none;
+            padding: 16px 52px;
+            border-radius: 60px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #3f2a38;
+            box-shadow: 0 8px 18px -8px rgba(160, 80, 120, 0.25),
+                        inset 0 1px 4px rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.5px;
+            font-family: 'Quicksand', sans-serif;
+            margin-top: 6px;
+        }
+
+        .btn-chats:hover {
+            background: #eacadc;
+            transform: scale(1.02);
+            box-shadow: 0 12px 28px -10px rgba(160, 70, 110, 0.35);
+        }
+
+        .btn-chats:active {
+            transform: scale(0.96);
+        }
+
+        /* БОКОВОЕ МЕНЮ */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: -380px;
+            width: 360px;
+            max-width: 85vw;
+            height: 100vh;
+            background: rgba(255, 245, 250, 0.92);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            box-shadow: -12px 0 40px rgba(100, 40, 70, 0.15);
+            padding: 32px 24px 40px;
+            z-index: 99;
+            transition: right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            display: flex;
+            flex-direction: column;
+            border-left: 2px solid rgba(255, 220, 240, 0.5);
+            overflow-y: auto;
+        }
+
+        .side-menu.open {
+            right: 0;
+        }
+
+        .menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(200, 150, 175, 0.2);
+        }
+
+        .menu-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #3f2a38;
+            letter-spacing: -0.3px;
+        }
+
+        .menu-close {
+            background: none;
+            border: none;
+            font-size: 2.2rem;
+            cursor: pointer;
+            color: #7a5f6e;
+            padding: 0 6px;
+            transition: transform 0.2s;
+            line-height: 1;
+        }
+
+        .menu-close:hover {
+            transform: rotate(90deg);
+            color: #3f2a38;
+        }
+
+        .chat-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .chat-item {
+            background: rgba(255, 240, 248, 0.6);
+            padding: 16px 20px;
+            border-radius: 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #3f2a38;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 6px rgba(180, 100, 140, 0.05);
+        }
+
+        .chat-item:hover {
+            background: #f5e0ec;
+            border-color: #eac0d6;
+            transform: translateX(4px);
+        }
+
+        .chat-item .emoji-badge {
+            font-size: 1.6rem;
+            line-height: 1;
+        }
+
+        .chat-item .chat-name {
+            flex: 1;
+        }
+
+        .chat-item .chat-badge {
+            background: #dbb6cc;
+            color: #3f2a38;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 14px;
+            border-radius: 30px;
+            letter-spacing: 0.3px;
+        }
+
+        .chat-item.locked .chat-badge {
+            background: #f0d0a0;
+            color: #7a5a30;
+        }
+
+        .chat-item.unlocked .chat-badge {
+            background: #a8d5a2;
+            color: #2a5a2a;
+        }
+
+        .menu-footer {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 2px solid rgba(200, 150, 175, 0.15);
+            font-size: 0.8rem;
+            color: #9a7f8e;
+            text-align: center;
+        }
+
+        .menu-footer a {
+            color: #9a7f8e;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .menu-footer a:hover {
+            color: #6b4b5e;
+            text-decoration: underline;
+        }
+
+        /* МОДАЛКА ПАРОЛЯ */
+        .password-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(30, 10, 25, 0.5);
+            backdrop-filter: blur(8px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .password-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .password-modal-content {
+            background: rgba(255, 245, 250, 0.95);
+            backdrop-filter: blur(16px);
+            padding: 40px 36px;
+            border-radius: 48px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(100, 40, 70, 0.25);
+            border: 1px solid rgba(255, 230, 245, 0.5);
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .password-modal.active .password-modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .password-modal-content h3 {
+            font-size: 1.6rem;
+            color: #3f2a38;
+            margin-bottom: 6px;
+        }
+
+        .password-modal-content .chat-name-display {
+            font-size: 1rem;
+            color: #7a5f6e;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .password-modal-content input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 40px;
+            border: 2px solid #e8d0de;
+            font-size: 1rem;
+            font-family: 'Quicksand', sans-serif;
+            background: rgba(255, 255, 255, 0.6);
+            transition: border-color 0.2s;
+            outline: none;
+            margin-bottom: 12px;
+        }
+
+        .password-modal-content input:focus {
+            border-color: #c49bb4;
+        }
+
+        .password-modal-content .error-msg {
+            color: #c0395a;
+            font-size: 0.85rem;
+            min-height: 24px;
+            margin-bottom: 8px;
+        }
+
+        .password-modal-content .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .password-modal-content .modal-buttons button {
+            padding: 12px 32px;
+            border-radius: 40px;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .password-modal-content .btn-confirm {
+            background: #dbb6cc;
+            color: #3f2a38;
+            flex: 1;
+        }
+
+        .password-modal-content .btn-confirm:hover {
+            background: #c9a3ba;
+            transform: scale(1.02);
+        }
+
+        .password-modal-content .btn-cancel {
+            background: rgba(180, 150, 165, 0.2);
+            color: #7a5f6e;
+            flex: 0.5;
+        }
+
+        .password-modal-content .btn-cancel:hover {
+            background: rgba(180, 150, 165, 0.3);
+        }
+
+        /* МОДАЛКА ПСЕВДОНИМА */
+        .nickname-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(30, 10, 25, 0.6);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .nickname-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .nickname-modal-content {
+            background: rgba(255, 245, 250, 0.96);
+            backdrop-filter: blur(16px);
+            padding: 44px 36px 38px;
+            border-radius: 48px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(100, 40, 70, 0.3);
+            border: 1px solid rgba(255, 230, 245, 0.5);
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .nickname-modal.active .nickname-modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .nickname-modal-content .pups-icon {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .nickname-modal-content h3 {
+            font-size: 1.8rem;
+            color: #3f2a38;
+            margin-bottom: 4px;
+        }
+
+        .nickname-modal-content .sub-hint {
+            color: #7a5f6e;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .nickname-modal-content .sub-hint small {
+            color: #a08090;
+            font-weight: 400;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .nickname-modal-content input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 40px;
+            border: 2px solid #e8d0de;
+            font-size: 1rem;
+            font-family: 'Quicksand', sans-serif;
+            background: rgba(255, 255, 255, 0.6);
+            transition: border-color 0.2s;
+            outline: none;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .nickname-modal-content input:focus {
+            border-color: #c49bb4;
+        }
+
+        .nickname-modal-content .btn-set-nick {
+            width: 100%;
+            padding: 14px;
+            border-radius: 40px;
+            border: none;
+            background: #dbb6cc;
+            color: #3f2a38;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .nickname-modal-content .btn-set-nick:hover {
+            background: #c9a3ba;
+            transform: scale(1.02);
+        }
+
+        @media (max-width: 500px) {
+            .glass-card {
+                padding: 32px 20px 36px;
+            }
+            h1 {
+                font-size: 2.6rem;
+            }
+            .btn-chats {
+                padding: 14px 32px;
+                font-size: 1.2rem;
+            }
+            .side-menu {
+                width: 100%;
+                max-width: 100vw;
+                right: -110%;
+            }
+            .side-menu.open {
+                right: 0;
+            }
+            .password-modal-content,
+            .nickname-modal-content {
+                padding: 30px 20px;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="login" id="login">
-
-<div class="card">
-
-<div class="logo">💬</div>
-
-<h1>PupsLand</h1>
-
-<p class="subtitle">
-
-Введите псевдоним
-
-</p>
-
-<input
-
-id="nickname"
-
-placeholder="Например Max">
-
-<button id="join">
-
-Войти
-
-</button>
-
-</div>
-
-</div>
-
-<div class="chat" id="chat">
-
-<header>
-
-<div class="brand">
-
-<div class="icon">
-
-💬
-
-</div>
-
-<div>
-
-<h2>PupsLand Chat</h2>
-
-<p>
-
-Firebase Online
-
-</p>
-
-</div>
-
-</div>
-
-<div class="online">
-
-● Онлайн
-
-</div>
-
-</header>
-
-<div
-
-class="messages"
-
-id="messages">
-  </div>
-
-<div class="bottom">
-
-<input
-id="message"
-placeholder="Сообщение...">
-
-<button
-class="send"
-id="send">
-
-➜
-
-</button>
-
-</div>
-
-</div>
-
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-
-import {
-
-getFirestore,
-
-collection,
-
-addDoc,
-
-query,
-
-orderBy,
-
-onSnapshot,
-
-serverTimestamp
-
-}
-
-from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-
-const firebaseConfig={
-
-apiKey:"AIzaSyDLbYzjQBqtjRAlR6-CZj2TZXJgb2Esz4M",
-
-authDomain:"plumhez.firebaseapp.com",
-
-projectId:"plumhez",
-
-storageBucket:"plumhez.firebasestorage.app",
-
-messagingSenderId:"454691669371",
-
-appId:"1:454691669371:web:4135144fa0270b5085e9de",
-
-measurementId:"G-N2TBHG8V9K"
-
-};
-
-const app=initializeApp(firebaseConfig);
-
-const db=getFirestore(app);
-
-const login=document.getElementById("login");
-
-const chat=document.getElementById("chat");
-
-const join=document.getElementById("join");
-
-const nickname=document.getElementById("nickname");
-
-const messages=document.getElementById("messages");
-
-const message=document.getElementById("message");
-
-const send=document.getElementById("send");
-
-let user=localStorage.getItem("nickname")||"";
-
-function openChat(){
-
-login.style.opacity="0";
-
-login.style.transform="scale(.95)";
-
-setTimeout(()=>{
-
-login.style.display="none";
-
-chat.style.display="flex";
-
-requestAnimationFrame(()=>{
-
-chat.classList.add("show");
-
-});
-
-},500);
-
-}
-
-if(user){
-
-nickname.value=user;
-
-openChat();
-
-}
-  join.onclick=()=>{
-
-const nick=nickname.value.trim();
-
-if(nick.length<2){
-
-alert("Введите псевдоним");
-
-return;
-
-}
-
-user=nick;
-
-localStorage.setItem("nickname",user);
-
-openChat();
-
-};
-
-function time(date){
-
-if(!date) return "";
-
-const d=date.toDate();
-
-return d.getHours().toString().padStart(2,"0")
-
-+":"
-
-+d.getMinutes().toString().padStart(2,"0");
-
-}
-
-function createMessage(data,id){
-
-const div=document.createElement("div");
-
-div.className=
-
-data.author===user
-
-?
-
-"message self"
-
-:
-
-"message";
-
-div.dataset.id=id;
-
-div.innerHTML=`
-
-<div class="author">
-
-${data.author}
-
-</div>
-
-<div>
-
-${escapeHtml(data.text)}
-
-</div>
-
-<div class="time">
-
-${time(data.created)}
-
-</div>
-
-`;
-
-messages.appendChild(div);
-
-messages.scrollTop=messages.scrollHeight;
-
-}
-
-function escapeHtml(text){
-
-return text
-
-.replace(/&/g,"&amp;")
-
-.replace(/</g,"&lt;")
-
-.replace(/>/g,"&gt;")
-
-.replace(/"/g,"&quot;")
-
-.replace(/'/g,"&#039;");
-
-}
-
-async function sendMessage(){
-
-const text=message.value.trim();
-
-if(text==="") return;
-
-await addDoc(
-
-collection(db,"messages"),
-
-{
-
-author:user,
-
-text:text,
-
-created:serverTimestamp()
-
-}
-
-);
-
-message.value="";
-
-message.focus();
-
-}
-
-send.onclick=sendMessage;
-
-message.addEventListener("keydown",e=>{
-
-if(e.key==="Enter"){
-
-e.preventDefault();
-
-sendMessage();
-
-}
-
-});
-  const q=query(
-
-collection(db,"messages"),
-
-orderBy("created")
-
-);
-
-onSnapshot(q,(snapshot)=>{
-
-messages.innerHTML="";
-
-snapshot.forEach(doc=>{
-
-createMessage(
-
-doc.data(),
-
-doc.id
-
-);
-
-});
-
-messages.scrollTop=
-
-messages.scrollHeight;
-
-});
-
-setTimeout(()=>{
-
-message.focus();
-
-},800);
-
-</script>
-
+    <!-- ГЛАВНАЯ КАРТОЧКА -->
+    <div class="glass-card" id="mainCard">
+        <div class="pups-avatar">
+            <div class="pups-avatar-inner">🐾</div>
+        </div>
+        <h1>Пупс чат</h1>
+        <div class="user-badge" id="userBadge">👤 <span id="nicknameDisplay">Гость</span></div>
+        <div class="sub-tg">
+            📌 тг <a href="https://t.me/rcvpg" target="_blank">@rcvpg</a> — писать по поводу паролей для пупсов
+        </div>
+        <button class="btn-chats" id="openMenuBtn">💬 Чаты</button>
+    </div>
+
+    <!-- БОКОВОЕ МЕНЮ -->
+    <div class="side-menu" id="sideMenu">
+        <div class="menu-header">
+            <h2>📋 Чаты</h2>
+            <button class="menu-close" id="closeMenuBtn">✕</button>
+        </div>
+        <div class="chat-list" id="chatList"></div>
+        <div class="menu-footer">
+            <span>🔐 пароли для пупсов — </span>
+            <a href="https://t.me/rcvpg" target="_blank">@rcvpg</a>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА ПАРОЛЯ -->
+    <div class="password-modal" id="passwordModal">
+        <div class="password-modal-content">
+            <h3>🔑 Введите пароль</h3>
+            <span class="chat-name-display" id="passwordChatName">Общий #2</span>
+            <input type="password" id="passwordInput" placeholder="Пароль от чата" autocomplete="off" />
+            <div class="error-msg" id="passwordError"></div>
+            <div class="modal-buttons">
+                <button class="btn-cancel" id="passwordCancel">Отмена</button>
+                <button class="btn-confirm" id="passwordConfirm">Войти</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА ПСЕВДОНИМА -->
+    <div class="nickname-modal" id="nicknameModal">
+        <div class="nickname-modal-content">
+            <span class="pups-icon">🐶</span>
+            <h3>Привет, пупс!</h3>
+            <div class="sub-hint">
+                Введите ваш псевдоним
+                <small>(он будет сохранён навсегда ✨)</small>
+            </div>
+            <input type="text" id="nicknameInput" placeholder="Ваш псевдоним" maxlength="30" autocomplete="off" />
+            <button class="btn-set-nick" id="setNickBtn">Сохранить</button>
+        </div>
+    </div>
+
+    <script>
+        // ---------- FIREBASE ----------
+        const firebaseConfig = {
+            apiKey: "AIzaSyDummyKeyReplaceMe123456789",
+            authDomain: "your-project.firebaseapp.com",
+            databaseURL: "https://your-project-default-rtdb.firebaseio.com",
+            projectId: "your-project",
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:abcdef123456"
+        };
+
+        let database;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            console.log('🔥 Firebase подключена');
+        } catch (e) {
+            console.warn('⚠️ Firebase не инициализирована');
+            database = null;
+        }
+
+        // ---------- ДАННЫЕ ЧАТОВ ----------
+        const CHATS = [
+            { id: 'general', name: 'Общий', emoji: '🌐', badge: 'все', password: null },
+            { id: 'general2', name: 'Общий #2', emoji: '🔹', badge: '🔒', password: 'pupsland.on.top' },
+            { id: 'general3', name: 'Общий #3', emoji: '🔸', badge: '🔒', password: 'spworld.soset' },
+            { id: 'general4', name: 'Общий #4', emoji: '🟣', badge: '🔒', password: 'plumhez.pidor' }
+        ];
+
+        // ---------- STATE ----------
+        let currentNickname = localStorage.getItem('pups_nickname') || '';
+        let unlockedChats = JSON.parse(localStorage.getItem('pups_unlocked') || '[]');
+
+        // ---------- ЭЛЕМЕНТЫ ----------
+        const nicknameModal = document.getElementById('nicknameModal');
+        const nicknameInput = document.getElementById('nicknameInput');
+        const setNickBtn = document.getElementById('setNickBtn');
+        const nicknameDisplay = document.getElementById('nicknameDisplay');
+
+        const passwordModal = document.getElementById('passwordModal');
+        const passwordInput = document.getElementById('passwordInput');
+        const passwordError = document.getElementById('passwordError');
+        const passwordChatName = document.getElementById('passwordChatName');
+        const passwordConfirm = document.getElementById('passwordConfirm');
+        const passwordCancel = document.getElementById('passwordCancel');
+
+        const chatList = document.getElementById('chatList');
+        const openMenuBtn = document.getElementById('openMenuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const sideMenu = document.getElementById('sideMenu');
+
+        let pendingChatId = null;
+
+        // ---------- ПСЕВДОНИМ ----------
+        function showNicknameModal() {
+            nicknameModal.classList.add('active');
+            nicknameInput.value = currentNickname || '';
+            nicknameInput.focus();
+            nicknameInput.select();
+        }
+
+        function hideNicknameModal() {
+            nicknameModal.classList.remove('active');
+        }
+
+        function setNickname() {
+            const val = nicknameInput.value.trim();
+            if (val.length < 2) {
+                alert('Псевдоним должен быть хотя бы 2 символа');
+                return;
+            }
+            currentNickname = val;
+            localStorage.setItem('pups_nickname', currentNickname);
+            nicknameDisplay.textContent = currentNickname;
+            hideNicknameModal();
+        }
+
+        // ---------- ПАРОЛИ ----------
+        function isChatUnlocked(chatId) {
+            return unlockedChats.includes(chatId);
+        }
+
+        function unlockChat(chatId) {
+            if (!unlockedChats.includes(chatId)) {
+                unlockedChats.push(chatId);
+                localStorage.setItem('pups_unlocked', JSON.stringify(unlockedChats));
+            }
+        }
+
+        function showPasswordModal(chatId, chatName) {
+            pendingChatId = chatId;
+            passwordChatName.textContent = chatName;
+            passwordInput.value = '';
+            passwordError.textContent = '';
+            passwordModal.classList.add('active');
+            setTimeout(() => passwordInput.focus(), 100);
+        }
+
+        function hidePasswordModal() {
+            passwordModal.classList.remove('active');
+            pendingChatId = null;
+        }
+
+        function tryPassword() {
+            const entered = passwordInput.value.trim();
+            const chat = CHATS.find(c => c.id === pendingChatId);
+            if (!chat) return;
+
+            if (entered === chat.password) {
+                unlockChat(chat.id);
+                hidePasswordModal();
+                renderChats();
+                enterChat(chat.id);
+            } else {
+                passwordError.textContent = '❌ Неверный пароль, попробуйте снова';
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        }
+
+        // ---------- ВХОД В ЧАТ ----------
+        function enterChat(chatId) {
+            const chat = CHATS.find(c => c.id === chatId);
+            if (!chat) return;
+
+            // Если чат требует пароль и он не разблокирован
+            if (chat.password && !isChatUnlocked(chat.id)) {
+                showPasswordModal(chat.id, chat.name);
+                return;
+            }
+
+            alert(`📨 Вход в чат «${chat.name}»\n👤 Псевдоним: ${currentNickname || 'Гость'}\n(здесь будет подключение к Firebase)`);
+            closeMenu();
+        }
+
+        // ---------- ОТРИСОВКА МЕНЮ ----------
+        function renderChats() {
+            chatList.innerHTML = '';
+            CHATS.forEach(chat => {
+                const unlocked = isChatUnlocked(chat.id) || !chat.password;
+                const div = document.createElement('div');
+                div.className = `chat-item ${unlocked ? 'unlocked' : 'locked'}`;
+                div.innerHTML = `
+                    <span class="emoji-badge">${chat.emoji}</span>
+                    <span class="chat-name">${chat.name}</span>
+                    <span class="chat-badge">${unlocked ? '✅' : '🔒'}</span>
+                `;
+                div.addEventListener('click', () => {
+                    if (!currentNickname) {
+                        alert('Сначала укажите псевдоним!');
+                        showNicknameModal();
+                        return;
+                    }
+                    enterChat(chat.id);
+                });
+                chatList.appendChild(div);
+            });
+        }
+
+        // ---------- УПРАВЛЕНИЕ МЕНЮ ----------
+        function openMenu() {
+            sideMenu.classList.add('open');
+            document.body.classList.add('menu-open');
+            renderChats();
+        }
+
+        function closeMenu() {
+            sideMenu.classList.remove('open');
+            document.body.classList.remove('menu-open');
+        }
+
+        // ---------- ИНИЦИАЛИЗАЦИЯ ----------
+        function init() {
+            // Псевдоним
+            if (currentNickname) {
+                nicknameDisplay.textContent = currentNickname;
+            } else {
+                showNicknameModal();
+            }
+
+            // События псевдонима
+            setNickBtn.addEventListener('click', setNickname);
+            nicknameInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') setNickname();
+            });
+
+            // События пароля
+            passwordConfirm.addEventListener('click', tryPassword);
+            passwordCancel.addEventListener('click', hidePasswordModal);
+            passwordInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') tryPassword();
+                if (e.key === 'Escape') hidePasswordModal();
+            });
+
+            // Закрытие модалки по клику вне
+            passwordModal.addEventListener('click', (e) => {
+                if (e.target === passwordModal) hidePasswordModal();
+            });
+
+            // Меню
+            openMenuBtn.addEventListener('click', openMenu);
+            closeMenuBtn.addEventListener('click', closeMenu);
+
+            document.addEventListener('click', (e) => {
+                if (document.body.classList.contains('menu-open')) {
+                    const card = document.getElementById('mainCard');
+                    if (!sideMenu.contains(e.target) && !card.contains(e.target)) {
+                        closeMenu();
+                    }
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeMenu();
+                    hidePasswordModal();
+                }
+            });
+
+            renderChats();
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
-
 </html>
