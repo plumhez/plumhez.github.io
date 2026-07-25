@@ -22,16 +22,17 @@
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             background: #0a0a0a;
             padding: 20px;
             margin: 0;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        body.menu-open::after {
+        body.menu-open::after,
+        body.chat-open::after {
             content: '';
             position: fixed;
             inset: 0;
@@ -529,6 +530,170 @@
             border-color: rgba(255, 255, 255, 0.15);
         }
 
+        .chat-window {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            max-width: 700px;
+            height: 100vh;
+            background: #0f0f0f;
+            z-index: 1000;
+            transition: right 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: -8px 0 48px rgba(0, 0, 0, 0.9);
+        }
+
+        .chat-window.open {
+            right: 0;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            background: #141414;
+            flex-shrink: 0;
+        }
+
+        .chat-header .chat-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .chat-header .chat-title span {
+            font-size: 1.6rem;
+        }
+
+        .chat-header .chat-close {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #555;
+            transition: all 0.2s;
+            padding: 0 8px;
+        }
+
+        .chat-header .chat-close:hover {
+            color: #aaa;
+            transform: rotate(90deg);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .chat-message {
+            max-width: 80%;
+            padding: 10px 16px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+            position: relative;
+        }
+
+        .chat-message.own {
+            align-self: flex-end;
+            background: rgba(255, 255, 255, 0.08);
+            color: #f0f0f0;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-message.other {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.04);
+            color: #cccccc;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-message .msg-user {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #888;
+            margin-bottom: 2px;
+        }
+
+        .chat-message .msg-text {
+            font-size: 0.95rem;
+        }
+
+        .chat-message .msg-time {
+            font-size: 0.6rem;
+            color: #555;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 12px;
+            padding: 16px 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            background: #141414;
+            flex-shrink: 0;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 12px 18px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input-area input::placeholder {
+            color: #444;
+        }
+
+        .chat-input-area input:focus {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .chat-input-area button {
+            padding: 12px 28px;
+            border-radius: 16px;
+            border: none;
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .chat-input-area button:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .chat-messages .empty-chat {
+            color: #444;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 40px;
+        }
+
         @media (max-width: 500px) {
             .glass-card {
                 padding: 36px 20px 32px;
@@ -555,6 +720,19 @@
             .password-modal-content,
             .nickname-modal-content {
                 padding: 30px 20px;
+            }
+            .chat-window {
+                max-width: 100%;
+            }
+            .chat-messages {
+                padding: 14px 16px;
+            }
+            .chat-input-area {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+            }
+            .chat-input-area button {
+                width: 100%;
             }
         }
 
@@ -604,6 +782,23 @@
         </div>
     </div>
 
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <div class="chat-title">
+                <span id="chatWindowEmoji">🌐</span>
+                <span id="chatWindowTitle">Общий</span>
+            </div>
+            <button class="chat-close" id="chatCloseBtn">✕</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="empty-chat">💬 Сообщений пока нет</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" placeholder="Напишите сообщение..." maxlength="500" />
+            <button id="chatSendBtn">➤ Отправить</button>
+        </div>
+    </div>
+
     <div class="password-modal" id="passwordModal">
         <div class="password-modal-content">
             <span class="sticker-lock">🔐</span>
@@ -632,10 +827,11 @@
     </div>
 
     <script>
-        // ============ ТВОЯ КОНФИГУРАЦИЯ FIREBASE ============
+        // ============ ИСПРАВЛЕННАЯ КОНФИГУРАЦИЯ FIREBASE ============
         const firebaseConfig = {
             apiKey: "AIzaSyDLbYzjQBqtjRAlR6-CZj2TZXJgb2Esz4M",
             authDomain: "plumhez.firebaseapp.com",
+            databaseURL: "https://plumhez-default-rtdb.europe-west1.firebasedatabase.app", // ← ИСПРАВЛЕНО!
             projectId: "plumhez",
             storageBucket: "plumhez.firebasestorage.app",
             messagingSenderId: "454691669371",
@@ -645,29 +841,30 @@
         // ====================================================
 
         let database;
+        let dbConnected = false;
+
         try {
             firebase.initializeApp(firebaseConfig);
             database = firebase.database();
             console.log('🔥 Firebase подключена! Проект: plumhez');
-            console.log('📦 База данных готова к работе');
-        } catch (e) {
-            console.warn('⚠️ Ошибка подключения Firebase:', e.message);
-            database = null;
-        }
 
-        // Проверка подключения к базе
-        if (database) {
             // Проверяем соединение
             const connectedRef = firebase.database().ref('.info/connected');
             connectedRef.on('value', (snap) => {
                 if (snap.val() === true) {
+                    dbConnected = true;
                     console.log('✅ Соединение с Firebase установлено!');
                 } else {
                     console.log('⏳ Ожидание соединения с Firebase...');
                 }
             });
+
+        } catch (e) {
+            console.warn('⚠️ Ошибка подключения Firebase:', e.message);
+            database = null;
         }
 
+        // ============ ДАННЫЕ ============
         const CHATS = [
             { id: 'general', name: 'Общий', emoji: '🌐', badge: 'все', password: null },
             { id: 'general2', name: 'Общий #2', emoji: '🔹', badge: '🔒', password: 'pupsland.on.top' },
@@ -677,7 +874,10 @@
 
         let currentNickname = localStorage.getItem('pups_nickname') || '';
         let unlockedChats = JSON.parse(localStorage.getItem('pups_unlocked') || '[]');
+        let currentChatId = null;
+        let messagesListener = null;
 
+        // ============ ЭЛЕМЕНТЫ ============
         const nicknameModal = document.getElementById('nicknameModal');
         const nicknameInput = document.getElementById('nicknameInput');
         const setNickBtn = document.getElementById('setNickBtn');
@@ -695,8 +895,17 @@
         const closeMenuBtn = document.getElementById('closeMenuBtn');
         const sideMenu = document.getElementById('sideMenu');
 
+        const chatWindow = document.getElementById('chatWindow');
+        const chatWindowTitle = document.getElementById('chatWindowTitle');
+        const chatWindowEmoji = document.getElementById('chatWindowEmoji');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const chatSendBtn = document.getElementById('chatSendBtn');
+        const chatCloseBtn = document.getElementById('chatCloseBtn');
+
         let pendingChatId = null;
 
+        // ============ ПСЕВДОНИМ ============
         function showNicknameModal() {
             nicknameModal.classList.add('active');
             nicknameInput.value = currentNickname || '';
@@ -720,6 +929,7 @@
             hideNicknameModal();
         }
 
+        // ============ ПАРОЛИ ============
         function isChatUnlocked(chatId) {
             return unlockedChats.includes(chatId);
         }
@@ -754,7 +964,7 @@
                 unlockChat(chat.id);
                 hidePasswordModal();
                 renderChats();
-                enterChat(chat.id);
+                openChat(chat.id);
             } else {
                 passwordError.textContent = '❌ Неверный пароль';
                 passwordInput.value = '';
@@ -762,7 +972,8 @@
             }
         }
 
-        function enterChat(chatId) {
+        // ============ ЧАТ ============
+        function openChat(chatId) {
             const chat = CHATS.find(c => c.id === chatId);
             if (!chat) return;
 
@@ -771,103 +982,45 @@
                 return;
             }
 
-            alert(`📨 Вход в чат «${chat.name}»\n👤 ${currentNickname || 'Гость'}`);
+            currentChatId = chatId;
+            chatWindowTitle.textContent = chat.name;
+            chatWindowEmoji.textContent = chat.emoji;
+            chatWindow.classList.add('open');
+            document.body.classList.add('chat-open');
+            chatInput.focus();
+
+            chatMessages.innerHTML = '<div class="empty-chat">⏳ Загрузка сообщений...</div>';
+
+            if (messagesListener) {
+                messagesListener();
+                messagesListener = null;
+            }
+
+            if (database) {
+                const messagesRef = firebase.database().ref('chats/' + chatId + '/messages');
+                messagesListener = messagesRef.orderByChild('timestamp').limitToLast(100).on('child_added', (snapshot) => {
+                    const data = snapshot.val();
+                    const emptyEl = chatMessages.querySelector('.empty-chat');
+                    if (emptyEl) emptyEl.remove();
+                    addMessageToChat(data.user, data.text, data.timestamp, data.user === currentNickname);
+                });
+
+                // Создаём структуру чата если её нет
+                const chatRef = firebase.database().ref('chats/' + chatId);
+                chatRef.once('value', (snap) => {
+                    if (!snap.exists()) {
+                        chatRef.set({ created: Date.now() });
+                    }
+                });
+            } else {
+                chatMessages.innerHTML = '<div class="empty-chat">❌ База данных не подключена</div>';
+            }
+
             closeMenu();
         }
 
-        function renderChats() {
-            chatList.innerHTML = '';
-            CHATS.forEach(chat => {
-                const unlocked = isChatUnlocked(chat.id) || !chat.password;
-                const div = document.createElement('div');
-                div.className = `chat-item ${unlocked ? 'unlocked' : 'locked'}`;
-                div.innerHTML = `
-                    <span class="emoji-badge">${chat.emoji}</span>
-                    <span class="chat-name">${chat.name}</span>
-                    <span class="chat-badge">${unlocked ? '✅' : '🔒'}</span>
-                `;
-                div.addEventListener('click', () => {
-                    if (!currentNickname) {
-                        alert('Сначала укажите псевдоним!');
-                        showNicknameModal();
-                        return;
-                    }
-                    enterChat(chat.id);
-                });
-                chatList.appendChild(div);
-            });
-        }
+        function addMessageToChat(user, text, timestamp, isOwn) {
+            const div = document.createElement('div');
+            div.className = `chat-message ${isOwn ? 'own' : 'other'}`;
 
-        function openMenu() {
-            sideMenu.classList.add('open');
-            document.body.classList.add('menu-open');
-            renderChats();
-        }
-
-        function closeMenu() {
-            sideMenu.classList.remove('open');
-            document.body.classList.remove('menu-open');
-        }
-
-        function init() {
-            if (currentNickname) {
-                nicknameDisplay.textContent = currentNickname;
-            } else {
-                showNicknameModal();
-            }
-
-            setNickBtn.addEventListener('click', setNickname);
-            nicknameInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') setNickname();
-            });
-
-            passwordConfirm.addEventListener('click', tryPassword);
-            passwordCancel.addEventListener('click', hidePasswordModal);
-            passwordInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') tryPassword();
-                if (e.key === 'Escape') hidePasswordModal();
-            });
-
-            passwordModal.addEventListener('click', (e) => {
-                if (e.target === passwordModal) hidePasswordModal();
-            });
-
-            openMenuBtn.addEventListener('click', openMenu);
-            closeMenuBtn.addEventListener('click', closeMenu);
-
-            document.addEventListener('click', (e) => {
-                if (document.body.classList.contains('menu-open')) {
-                    const card = document.getElementById('mainCard');
-                    if (!sideMenu.contains(e.target) && !card.contains(e.target)) {
-                        closeMenu();
-                    }
-                }
-            });
-
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    closeMenu();
-                    hidePasswordModal();
-                }
-            });
-
-            renderChats();
-
-            // Демо-запрос к Firebase (проверка)
-            if (database) {
-                const testRef = firebase.database().ref('test');
-                testRef.set({
-                    message: 'Пупс чат работает!',
-                    timestamp: Date.now()
-                }).then(() => {
-                    console.log('✅ Тестовая запись в Firebase создана');
-                }).catch((err) => {
-                    console.warn('⚠️ Ошибка записи в Firebase:', err);
-                });
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
-</body>
-</html>
+            const time = new Date(timestamp).toLocaleTimeString
