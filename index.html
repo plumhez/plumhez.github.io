@@ -686,6 +686,7 @@
         let messagesListener = null;
         let pendingChatId = null;
 
+        // Элементы
         const nicknameModal = document.getElementById('nicknameModal');
         const nicknameInput = document.getElementById('nicknameInput');
         const setNickBtn = document.getElementById('setNickBtn');
@@ -712,6 +713,7 @@
         const chatCloseBtn = document.getElementById('chatCloseBtn');
         const openMenuFromChatBtn = document.getElementById('openMenuFromChatBtn');
 
+        // ============ ПСЕВДОНИМ ============
         function showNicknameModal() {
             nicknameModal.classList.add('active');
             nicknameInput.value = currentNickname || '';
@@ -735,6 +737,7 @@
             console.log('👤 Псевдоним сохранён:', currentNickname);
         }
 
+        // ============ ПАРОЛИ ============
         function isChatUnlocked(chatId) {
             return unlockedChats.includes(chatId);
         }
@@ -777,6 +780,7 @@
             }
         }
 
+        // ============ РЕНДЕР ЧАТОВ ============
         function renderChats() {
             chatList.innerHTML = '';
             CHATS.forEach(chat => {
@@ -799,7 +803,7 @@
             });
         }
 
-        // ============ ГЛАВНОЕ ИСПРАВЛЕНИЕ: ОТПИСКА ОТ СТАРОГО СЛУШАТЕЛЯ ============
+        // ============ ОТПИСКА ОТ СТАРОГО ЧАТА ============
         function detachMessagesListener() {
             if (messagesListener) {
                 console.log('🔄 Отписываемся от старого чата');
@@ -808,6 +812,7 @@
             }
         }
 
+        // ============ ОТКРЫТЬ ЧАТ ============
         function openChat(chatId) {
             const chat = CHATS.find(c => c.id === chatId);
             if (!chat) return;
@@ -817,7 +822,7 @@
                 return;
             }
 
-            // ОТПИСЫВАЕМСЯ ОТ СТАРОГО СЛУШАТЕЛЯ
+            // Отписываемся от старого
             detachMessagesListener();
 
             currentChatId = chatId;
@@ -826,13 +831,12 @@
             chatWindow.classList.add('open');
             chatInput.focus();
 
-            // Очищаем сообщения
             chatMessages.innerHTML = '<div class="empty-chat">⏳ Загрузка сообщений...</div>';
 
             if (database) {
                 const messagesRef = firebase.database().ref('chats/' + chatId + '/messages');
 
-                // ПОДПИСЫВАЕМСЯ НА НОВЫЙ ЧАТ
+                // Подписываемся на новый чат
                 messagesListener = messagesRef.orderByChild('timestamp').limitToLast(100).on('child_added', function(
                     snapshot) {
                     const data = snapshot.val();
@@ -849,7 +853,7 @@
                     }
                 });
 
-                // Подгружаем существующие сообщения (для нового чата)
+                // Загружаем историю
                 messagesRef.orderByChild('timestamp').limitToLast(100).once('value', function(snapshot) {
                     const emptyEl = chatMessages.querySelector('.empty-chat');
                     if (emptyEl) emptyEl.remove();
@@ -859,12 +863,11 @@
                         messages.push(childSnapshot.val());
                     });
 
-                    // Сортируем по времени
                     messages.sort((a, b) => a.timestamp - b.timestamp);
 
                     messages.forEach(function(data) {
                         addMessageToChat(data.user, data.text, data.timestamp, data.user ===
-                        currentNickname);
+                            currentNickname);
                     });
 
                     if (messages.length === 0) {
@@ -879,6 +882,7 @@
             closeMenu();
         }
 
+        // ============ ДОБАВИТЬ СООБЩЕНИЕ ============
         function addMessageToChat(user, text, timestamp, isOwn) {
             const div = document.createElement('div');
             div.className = 'chat-message ' + (isOwn ? 'own' : 'other');
@@ -897,6 +901,7 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
+        // ============ ОТПРАВИТЬ СООБЩЕНИЕ ============
         function sendMessage() {
             const text = chatInput.value.trim();
             if (!text || !currentChatId || !database) return;
@@ -917,19 +922,21 @@
             chatInput.focus();
         }
 
+        // ============ УПРАВЛЕНИЕ МЕНЮ ============
         function openMenu() {
+            console.log('📋 Открываем меню');
             sideMenu.classList.add('open');
             document.body.classList.add('menu-open');
             renderChats();
         }
 
         function closeMenu() {
+            console.log('📋 Закрываем меню');
             sideMenu.classList.remove('open');
             document.body.classList.remove('menu-open');
         }
 
         function closeChat() {
-            // ОТПИСЫВАЕМСЯ ПРИ ЗАКРЫТИИ ЧАТА
             detachMessagesListener();
             chatWindow.classList.remove('open');
             document.body.classList.remove('chat-open');
@@ -937,13 +944,14 @@
             chatMessages.innerHTML = '<div class="empty-chat">💬 Сообщений пока нет</div>';
         }
 
-        // ИНИЦИАЛИЗАЦИЯ
+        // ============ ИНИЦИАЛИЗАЦИЯ ============
         if (currentNickname) {
             nicknameDisplay.textContent = currentNickname;
         } else {
             showNicknameModal();
         }
 
+        // Кнопки
         setNickBtn.addEventListener('click', setNickname);
         nicknameInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') setNickname();
@@ -955,12 +963,4 @@
             if (e.key === 'Enter') tryPassword();
             if (e.key === 'Escape') hidePasswordModal();
         });
-        passwordModal.addEventListener('click', function(e) {
-            if (e.target === passwordModal) hidePasswordModal();
-        });
-
-        openMenuBtn.addEventListener('click', openMenu);
-        openMenuFromChatBtn.addEventListener('click', openMenu);
-        closeMenuBtn.addEventListener('click', closeMenu);
-
-        chatSendBtn.addEventListener('click', send
+        passwordModal.addEventListener('click', function
