@@ -653,8 +653,7 @@
     <script>
         console.log('🚀 Пупс чат запущен');
 
-        // ============ КОНФИГУРАЦИЯ FIREBASE ============
-        const firebaseConfig = {
+        var firebaseConfig = {
             apiKey: "AIzaSyDLbYzjQBqtjRAlR6-CZj2TZXJgb2Esz4M",
             authDomain: "plumhez.firebaseapp.com",
             databaseURL: "https://plumhez-default-rtdb.europe-west1.firebasedatabase.app",
@@ -665,37 +664,24 @@
             measurementId: "G-QH35KQ4ZLD"
         };
 
-        // ============ ПОДКЛЮЧЕНИЕ FIREBASE ============
-        let database = null;
-        let dbReady = false;
+        var database = null;
+        var dbReady = false;
 
         try {
             firebase.initializeApp(firebaseConfig);
             database = firebase.database();
             console.log('✅ Firebase инициализирована');
 
-            const connectedRef = firebase.database().ref('.info/connected');
-            connectedRef.on('value', function(snap) {
-                if (snap.val() === true) {
-                    dbReady = true;
-                    console.log('✅ СОЕДИНЕНИЕ С FIREBASE УСТАНОВЛЕНО!');
-                } else {
-                    dbReady = false;
-                    console.log('⏳ Ожидание соединения...');
-                }
+            firebase.database().ref('.info/connected').on('value', function(snap) {
+                dbReady = snap.val() === true;
+                console.log(dbReady ? '✅ Соединение установлено' : '⏳ Ожидание...');
             });
 
-            // Тестовая запись
             setTimeout(function() {
                 if (database) {
-                    firebase.database().ref('test').set({
-                        message: 'Пупс чат работает!',
-                        timestamp: Date.now()
-                    }).then(function() {
-                        console.log('✅ Тестовая запись создана');
-                    }).catch(function(err) {
-                        console.warn('⚠️ Ошибка теста:', err);
-                    });
+                    firebase.database().ref('test').set({ time: Date.now() })
+                        .then(function() { console.log('✅ Тестовая запись создана'); })
+                        .catch(function(e) { console.warn('⚠️ Ошибка теста:', e); });
                 }
             }, 2000);
 
@@ -704,7 +690,6 @@
             database = null;
         }
 
-        // ============ ДАННЫЕ ЧАТОВ ============
         var CHATS = [
             { id: 'general', name: 'Общий', emoji: '🌐', badge: 'все', password: null },
             { id: 'general2', name: 'Общий #2', emoji: '🔹', badge: '🔒', password: 'pupsland.on.top' },
@@ -718,7 +703,6 @@
         var messagesListener = null;
         var pendingChatId = null;
 
-        // ============ ЭЛЕМЕНТЫ ============
         var nicknameModal = document.getElementById('nicknameModal');
         var nicknameInput = document.getElementById('nicknameInput');
         var setNickBtn = document.getElementById('setNickBtn');
@@ -745,7 +729,6 @@
         var chatCloseBtn = document.getElementById('chatCloseBtn');
         var openMenuFromChatBtn = document.getElementById('openMenuFromChatBtn');
 
-        // ============ ПСЕВДОНИМ ============
         function showNicknameModal() {
             nicknameModal.classList.add('active');
             nicknameInput.value = currentNickname || '';
@@ -766,10 +749,8 @@
             localStorage.setItem('pups_nickname', currentNickname);
             nicknameDisplay.textContent = currentNickname;
             hideNicknameModal();
-            console.log('👤 Псевдоним сохранён:', currentNickname);
         }
 
-        // ============ ПАРОЛИ ============
         function isChatUnlocked(chatId) {
             return unlockedChats.indexOf(chatId) !== -1;
         }
@@ -812,7 +793,6 @@
             }
         }
 
-        // ============ ОТРИСОВКА ЧАТОВ ============
         function renderChats() {
             chatList.innerHTML = '';
             CHATS.forEach(function(chat) {
@@ -835,7 +815,6 @@
             });
         }
 
-        // ============ ОТПИСКА ============
         function detachMessagesListener() {
             if (messagesListener) {
                 messagesListener();
@@ -843,7 +822,21 @@
             }
         }
 
-        // ============ ОТКРЫТЬ ЧАТ ============
+        function addMessage(user, text, timestamp, isOwn) {
+            var div = document.createElement('div');
+            div.className = 'chat-message ' + (isOwn ? 'own' : 'other');
+            var time = new Date(timestamp).toLocaleTimeString('ru-RU', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            div.innerHTML =
+                '<div class="msg-user">' + (user || 'Аноним') + '</div>' +
+                '<div class="msg-text">' + text + '</div>' +
+                '<div class="msg-time">' + time + '</div>';
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
         function openChat(chatId) {
             var chat = CHATS.find(function(c) { return c.id === chatId; });
             if (!chat) return;
@@ -906,26 +899,6 @@
             closeMenu();
         }
 
-        // ============ ДОБАВИТЬ СООБЩЕНИЕ ============
-        function addMessage(user, text, timestamp, isOwn) {
-            var div = document.createElement('div');
-            div.className = 'chat-message ' + (isOwn ? 'own' : 'other');
-
-            var time = new Date(timestamp).toLocaleTimeString('ru-RU', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-
-            div.innerHTML =
-                '<div class="msg-user">' + (user || 'Аноним') + '</div>' +
-                '<div class="msg-text">' + text + '</div>' +
-                '<div class="msg-time">' + time + '</div>';
-
-            chatMessages.appendChild(div);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        // ============ ОТПРАВИТЬ ============
         function sendMessage() {
             var text = chatInput.value.trim();
             if (!text || !currentChatId || !database || !dbReady) return;
@@ -945,7 +918,6 @@
             chatInput.focus();
         }
 
-        // ============ УПРАВЛЕНИЕ ============
         function openMenu() {
             sideMenu.classList.add('open');
             document.body.classList.add('menu-open');
@@ -960,4 +932,38 @@
         function closeChat() {
             detachMessagesListener();
             chatWindow.classList.remove('open');
-            currentChatId =
+            currentChatId = null;
+            chatMessages.innerHTML = '<div class="empty-chat">💬 Сообщений пока нет</div>';
+        }
+
+        // ============ ИНИЦИАЛИЗАЦИЯ ============
+        if (currentNickname) {
+            nicknameDisplay.textContent = currentNickname;
+        } else {
+            showNicknameModal();
+        }
+
+        setNickBtn.addEventListener('click', setNickname);
+        nicknameInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') setNickname();
+        });
+
+        passwordConfirm.addEventListener('click', tryPassword);
+        passwordCancel.addEventListener('click', hidePasswordModal);
+        passwordInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') tryPassword();
+            if (e.key === 'Escape') hidePasswordModal();
+        });
+        passwordModal.addEventListener('click', function(e) {
+            if (e.target === passwordModal) hidePasswordModal();
+        });
+
+        openMenuBtn.addEventListener('click', openMenu);
+        openMenuFromChatBtn.addEventListener('click', openMenu);
+        closeMenuBtn.addEventListener('click', closeMenu);
+
+        chatSendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+        chatCloseBtn.addEventListener('click', close
