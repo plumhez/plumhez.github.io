@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
 
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
@@ -534,6 +535,48 @@
             display: block;
             margin-bottom: 4px;
         }
+        .status-bar {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #888;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            z-index: 9999;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            max-width: 90%;
+        }
+        .status-bar .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-bar .status-dot.online {
+            background: #4caf50;
+        }
+        .status-bar .status-dot.offline {
+            background: #f44336;
+        }
+        .status-bar .status-dot.waiting {
+            background: #ff9800;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
         @media (max-width: 500px) {
             .glass-card {
                 padding: 36px 20px 32px;
@@ -576,6 +619,11 @@
             }
             .chat-close {
                 font-size: 1.4rem;
+            }
+            .status-bar {
+                font-size: 0.65rem;
+                padding: 6px 14px;
+                bottom: 10px;
             }
         }
         ::-webkit-scrollbar {
@@ -650,9 +698,17 @@
         </div>
     </div>
 
-    <script>
-        console.log('🚀 Пупс чат запущен');
+    <!-- СТАТУС БАР -->
+    <div class="status-bar" id="statusBar">
+        <span class="status-dot waiting" id="statusDot"></span>
+        <span id="statusText">Подключение к Firebase...</span>
+    </div>
 
+    <script>
+        console.log('🚀 ===== ПУПС ЧАТ ЗАПУЩЕН =====');
+        console.log('📅', new Date().toLocaleString());
+
+        // ============ КОНФИГУРАЦИЯ FIREBASE ============
         const firebaseConfig = {
             apiKey: "AIzaSyDLbYzjQBqtjRAlR6-CZj2TZXJgb2Esz4M",
             authDomain: "plumhez.firebaseapp.com",
@@ -664,15 +720,64 @@
             measurementId: "G-QH35KQ4ZLD"
         };
 
+        console.log('🔧 Конфигурация Firebase:');
+        console.log('   databaseURL:', firebaseConfig.databaseURL);
+        console.log('   projectId:', firebaseConfig.projectId);
+
+        // ============ ПОДКЛЮЧЕНИЕ FIREBASE ============
         let database = null;
-        try {
-            firebase.initializeApp(firebaseConfig);
-            database = firebase.database();
-            console.log('✅ Firebase подключена');
-        } catch (e) {
-            console.error('❌ Ошибка Firebase:', e);
+        let dbConnected = false;
+
+        function updateStatus(status, text) {
+            const dot = document.getElementById('statusDot');
+            const textEl = document.getElementById('statusText');
+            dot.className = 'status-dot ' + status;
+            textEl.textContent = text;
+            console.log('📡 Статус:', status, '-', text);
         }
 
+        try {
+            console.log('🔄 Инициализация Firebase...');
+            firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            console.log('✅ Firebase инициализирована!');
+
+            // Проверяем соединение
+            const connectedRef = firebase.database().ref('.info/connected');
+            connectedRef.on('value', function(snap) {
+                if (snap.val() === true) {
+                    dbConnected = true;
+                    updateStatus('online', '✅ Firebase подключена');
+                    console.log('✅ Соединение с Firebase установлено!');
+                } else {
+                    dbConnected = false;
+                    updateStatus('offline', '⏳ Ожидание соединения...');
+                    console.log('⏳ Ожидание соединения с Firebase...');
+                }
+            });
+
+            // Тестовый запрос
+            setTimeout(function() {
+                if (database) {
+                    const testRef = firebase.database().ref('test');
+                    testRef.set({
+                        message: 'Пупс чат работает!',
+                        timestamp: Date.now()
+                    }).then(function() {
+                        console.log('✅ Тестовая запись в Firebase создана');
+                    }).catch(function(err) {
+                        console.warn('⚠️ Ошибка тестовой записи:', err);
+                    });
+                }
+            }, 2000);
+
+        } catch (e) {
+            console.error('❌ ОШИБКА ПОДКЛЮЧЕНИЯ FIREBASE:', e);
+            updateStatus('offline', '❌ Ошибка: ' + e.message);
+            database = null;
+        }
+
+        // ============ ДАННЫЕ ЧАТОВ ============
         const CHATS = [
             { id: 'general', name: 'Общий', emoji: '🌐', badge: 'все', password: null },
             { id: 'general2', name: 'Общий #2', emoji: '🔹', badge: '🔒', password: 'pupsland.on.top' },
@@ -713,8 +818,11 @@
         const chatCloseBtn = document.getElementById('chatCloseBtn');
         const openMenuFromChatBtn = document.getElementById('openMenuFromChatBtn');
 
+        console.log('📦 DOM элементы загружены');
+
         // ============ ПСЕВДОНИМ ============
         function showNicknameModal() {
+            console.log('👤 Показываем модалку псевдонима');
             nicknameModal.classList.add('active');
             nicknameInput.value = currentNickname || '';
             nicknameInput.focus();
@@ -746,10 +854,12 @@
             if (!unlockedChats.includes(chatId)) {
                 unlockedChats.push(chatId);
                 localStorage.setItem('pups_unlocked', JSON.stringify(unlockedChats));
+                console.log('🔓 Чат разблокирован:', chatId);
             }
         }
 
         function showPasswordModal(chatId, chatName) {
+            console.log('🔐 Запрос пароля для:', chatName);
             pendingChatId = chatId;
             passwordChatName.textContent = chatName;
             passwordInput.value = '';
@@ -782,6 +892,7 @@
 
         // ============ РЕНДЕР ЧАТОВ ============
         function renderChats() {
+            console.log('📋 Рендерим список чатов');
             chatList.innerHTML = '';
             CHATS.forEach(chat => {
                 const unlocked = isChatUnlocked(chat.id) || !chat.password;
@@ -792,6 +903,7 @@
                     '<span class="chat-name">' + chat.name + '</span>' +
                     '<span class="chat-badge">' + (unlocked ? '✅' : '🔒') + '</span>';
                 div.addEventListener('click', function() {
+                    console.log('📨 Клик по чату:', chat.name);
                     if (!currentNickname) {
                         alert('Сначала укажите псевдоним!');
                         showNicknameModal();
@@ -801,6 +913,7 @@
                 });
                 chatList.appendChild(div);
             });
+            console.log('📋 Чатов отрисовано:', CHATS.length);
         }
 
         // ============ ОТПИСКА ОТ СТАРОГО ЧАТА ============
@@ -814,6 +927,7 @@
 
         // ============ ОТКРЫТЬ ЧАТ ============
         function openChat(chatId) {
+            console.log('📨 Открываем чат:', chatId);
             const chat = CHATS.find(c => c.id === chatId);
             if (!chat) return;
 
@@ -833,134 +947,5 @@
 
             chatMessages.innerHTML = '<div class="empty-chat">⏳ Загрузка сообщений...</div>';
 
-            if (database) {
+            if (database && dbConnected) {
                 const messagesRef = firebase.database().ref('chats/' + chatId + '/messages');
-
-                // Подписываемся на новый чат
-                messagesListener = messagesRef.orderByChild('timestamp').limitToLast(100).on('child_added', function(
-                    snapshot) {
-                    const data = snapshot.val();
-                    const emptyEl = chatMessages.querySelector('.empty-chat');
-                    if (emptyEl) emptyEl.remove();
-                    addMessageToChat(data.user, data.text, data.timestamp, data.user === currentNickname);
-                });
-
-                // Создаём чат если его нет
-                const chatRef = firebase.database().ref('chats/' + chatId);
-                chatRef.once('value', function(snap) {
-                    if (!snap.exists()) {
-                        chatRef.set({ created: Date.now() });
-                    }
-                });
-
-                // Загружаем историю
-                messagesRef.orderByChild('timestamp').limitToLast(100).once('value', function(snapshot) {
-                    const emptyEl = chatMessages.querySelector('.empty-chat');
-                    if (emptyEl) emptyEl.remove();
-
-                    const messages = [];
-                    snapshot.forEach(function(childSnapshot) {
-                        messages.push(childSnapshot.val());
-                    });
-
-                    messages.sort((a, b) => a.timestamp - b.timestamp);
-
-                    messages.forEach(function(data) {
-                        addMessageToChat(data.user, data.text, data.timestamp, data.user ===
-                            currentNickname);
-                    });
-
-                    if (messages.length === 0) {
-                        chatMessages.innerHTML = '<div class="empty-chat">💬 Сообщений пока нет</div>';
-                    }
-                });
-
-            } else {
-                chatMessages.innerHTML = '<div class="empty-chat">❌ База данных не подключена</div>';
-            }
-
-            closeMenu();
-        }
-
-        // ============ ДОБАВИТЬ СООБЩЕНИЕ ============
-        function addMessageToChat(user, text, timestamp, isOwn) {
-            const div = document.createElement('div');
-            div.className = 'chat-message ' + (isOwn ? 'own' : 'other');
-
-            const time = new Date(timestamp).toLocaleTimeString('ru-RU', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-
-            div.innerHTML =
-                '<div class="msg-user">' + (user || 'Аноним') + '</div>' +
-                '<div class="msg-text">' + text + '</div>' +
-                '<div class="msg-time">' + time + '</div>';
-
-            chatMessages.appendChild(div);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        // ============ ОТПРАВИТЬ СООБЩЕНИЕ ============
-        function sendMessage() {
-            const text = chatInput.value.trim();
-            if (!text || !currentChatId || !database) return;
-            if (!currentNickname) {
-                alert('Сначала укажите псевдоним!');
-                showNicknameModal();
-                return;
-            }
-
-            const messagesRef = firebase.database().ref('chats/' + currentChatId + '/messages');
-            messagesRef.push({
-                user: currentNickname,
-                text: text,
-                timestamp: Date.now()
-            });
-
-            chatInput.value = '';
-            chatInput.focus();
-        }
-
-        // ============ УПРАВЛЕНИЕ МЕНЮ ============
-        function openMenu() {
-            console.log('📋 Открываем меню');
-            sideMenu.classList.add('open');
-            document.body.classList.add('menu-open');
-            renderChats();
-        }
-
-        function closeMenu() {
-            console.log('📋 Закрываем меню');
-            sideMenu.classList.remove('open');
-            document.body.classList.remove('menu-open');
-        }
-
-        function closeChat() {
-            detachMessagesListener();
-            chatWindow.classList.remove('open');
-            document.body.classList.remove('chat-open');
-            currentChatId = null;
-            chatMessages.innerHTML = '<div class="empty-chat">💬 Сообщений пока нет</div>';
-        }
-
-        // ============ ИНИЦИАЛИЗАЦИЯ ============
-        if (currentNickname) {
-            nicknameDisplay.textContent = currentNickname;
-        } else {
-            showNicknameModal();
-        }
-
-        // Кнопки
-        setNickBtn.addEventListener('click', setNickname);
-        nicknameInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') setNickname();
-        });
-
-        passwordConfirm.addEventListener('click', tryPassword);
-        passwordCancel.addEventListener('click', hidePasswordModal);
-        passwordInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') tryPassword();
-            if (e.key === 'Escape') hidePasswordModal();
-        });
-        passwordModal.addEventListener('click', function
