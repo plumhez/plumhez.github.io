@@ -966,4 +966,7 @@
         chatInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') sendMessage();
         });
-        chatCloseBtn.addEventListener('click', close
+        chatCloseBtn.addEventListener('click', closeChat);
+
+        document.addEventListener('keydown', function(e) {
+            if
