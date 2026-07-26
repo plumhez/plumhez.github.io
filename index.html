@@ -799,6 +799,15 @@
             });
         }
 
+        // ============ ГЛАВНОЕ ИСПРАВЛЕНИЕ: ОТПИСКА ОТ СТАРОГО СЛУШАТЕЛЯ ============
+        function detachMessagesListener() {
+            if (messagesListener) {
+                console.log('🔄 Отписываемся от старого чата');
+                messagesListener();
+                messagesListener = null;
+            }
+        }
+
         function openChat(chatId) {
             const chat = CHATS.find(c => c.id === chatId);
             if (!chat) return;
@@ -808,35 +817,61 @@
                 return;
             }
 
+            // ОТПИСЫВАЕМСЯ ОТ СТАРОГО СЛУШАТЕЛЯ
+            detachMessagesListener();
+
             currentChatId = chatId;
             chatWindowTitle.textContent = chat.name;
             chatWindowEmoji.textContent = chat.emoji;
             chatWindow.classList.add('open');
             chatInput.focus();
 
+            // Очищаем сообщения
             chatMessages.innerHTML = '<div class="empty-chat">⏳ Загрузка сообщений...</div>';
-
-            if (messagesListener) {
-                messagesListener();
-                messagesListener = null;
-            }
 
             if (database) {
                 const messagesRef = firebase.database().ref('chats/' + chatId + '/messages');
+
+                // ПОДПИСЫВАЕМСЯ НА НОВЫЙ ЧАТ
                 messagesListener = messagesRef.orderByChild('timestamp').limitToLast(100).on('child_added', function(
-                snapshot) {
+                    snapshot) {
                     const data = snapshot.val();
                     const emptyEl = chatMessages.querySelector('.empty-chat');
                     if (emptyEl) emptyEl.remove();
                     addMessageToChat(data.user, data.text, data.timestamp, data.user === currentNickname);
                 });
 
+                // Создаём чат если его нет
                 const chatRef = firebase.database().ref('chats/' + chatId);
                 chatRef.once('value', function(snap) {
                     if (!snap.exists()) {
                         chatRef.set({ created: Date.now() });
                     }
                 });
+
+                // Подгружаем существующие сообщения (для нового чата)
+                messagesRef.orderByChild('timestamp').limitToLast(100).once('value', function(snapshot) {
+                    const emptyEl = chatMessages.querySelector('.empty-chat');
+                    if (emptyEl) emptyEl.remove();
+
+                    const messages = [];
+                    snapshot.forEach(function(childSnapshot) {
+                        messages.push(childSnapshot.val());
+                    });
+
+                    // Сортируем по времени
+                    messages.sort((a, b) => a.timestamp - b.timestamp);
+
+                    messages.forEach(function(data) {
+                        addMessageToChat(data.user, data.text, data.timestamp, data.user ===
+                        currentNickname);
+                    });
+
+                    if (messages.length === 0) {
+                        chatMessages.innerHTML = '<div class="empty-chat">💬 Сообщений пока нет</div>';
+                    }
+                });
+
             } else {
                 chatMessages.innerHTML = '<div class="empty-chat">❌ База данных не подключена</div>';
             }
@@ -894,13 +929,12 @@
         }
 
         function closeChat() {
+            // ОТПИСЫВАЕМСЯ ПРИ ЗАКРЫТИИ ЧАТА
+            detachMessagesListener();
             chatWindow.classList.remove('open');
             document.body.classList.remove('chat-open');
-            if (messagesListener) {
-                messagesListener();
-                messagesListener = null;
-            }
             currentChatId = null;
+            chatMessages.innerHTML = '<div class="empty-chat">💬 Сообщений пока нет</div>';
         }
 
         // ИНИЦИАЛИЗАЦИЯ
@@ -929,22 +963,4 @@
         openMenuFromChatBtn.addEventListener('click', openMenu);
         closeMenuBtn.addEventListener('click', closeMenu);
 
-        chatSendBtn.addEventListener('click', sendMessage);
-        chatInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') sendMessage();
-        });
-        chatCloseBtn.addEventListener('click', closeChat);
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeMenu();
-                closeChat();
-                hidePasswordModal();
-            }
-        });
-
-        renderChats();
-        console.log('✅ Пупс чат готов!');
-    </script>
-</body>
-</html>
+        chatSendBtn.addEventListener('click', send
