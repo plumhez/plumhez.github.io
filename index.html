@@ -17,7 +17,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         html,
         body {
             height: 100%;
@@ -25,21 +24,17 @@
             font-family: 'Inter', sans-serif;
             background: #0a0a0a;
         }
-
         body {
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
         }
-
-        /* РАЗМЫТИЕ */
         body.menu-open .glass-card {
             filter: blur(8px);
             pointer-events: none;
             transition: filter 0.4s ease;
         }
-
         body.menu-open::after {
             content: '';
             position: fixed;
@@ -47,8 +42,6 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: 9;
         }
-
-        /* ГЛАВНАЯ */
         .glass-card {
             max-width: 600px;
             width: 100%;
@@ -62,7 +55,6 @@
             z-index: 10;
             transition: filter 0.4s ease;
         }
-
         .sticker-baby {
             font-size: 80px;
             display: block;
@@ -71,10 +63,13 @@
         }
         @keyframes float {
             0%,
-            100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
         }
-
         h1 {
             font-size: 2.8rem;
             font-weight: 800;
@@ -84,7 +79,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
         .user-badge {
             display: inline-block;
             background: rgba(255, 255, 255, 0.05);
@@ -98,7 +92,6 @@
         .user-badge span {
             color: #ccc;
         }
-
         .sub-tg {
             font-size: 0.8rem;
             color: #555;
@@ -117,7 +110,6 @@
         .sub-tg a:hover {
             color: #aaa;
         }
-
         .btn-chats {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -137,8 +129,6 @@
             border-color: rgba(255, 255, 255, 0.15);
             transform: scale(1.02);
         }
-
-        /* МЕНЮ ЧАТОВ */
         .side-menu {
             position: fixed;
             top: 0;
@@ -159,7 +149,6 @@
         .side-menu.open {
             right: 0;
         }
-
         .menu-header {
             display: flex;
             justify-content: space-between;
@@ -185,7 +174,6 @@
             color: #aaa;
             transform: rotate(90deg);
         }
-
         .chat-list {
             display: flex;
             flex-direction: column;
@@ -235,7 +223,6 @@
             color: #484;
             background: rgba(80, 200, 80, 0.08);
         }
-
         .menu-footer {
             margin-top: 20px;
             padding-top: 18px;
@@ -249,8 +236,6 @@
             text-decoration: none;
             font-weight: 600;
         }
-
-        /* ЧАТ (ПОЛНОЭКРАННЫЙ) */
         .chat-window {
             position: fixed;
             top: 0;
@@ -267,7 +252,6 @@
         .chat-window.open {
             transform: translateX(0);
         }
-
         .chat-header {
             display: flex;
             align-items: center;
@@ -289,13 +273,11 @@
         .chat-header .chat-title span {
             font-size: 1.6rem;
         }
-
         .chat-header .chat-actions {
             display: flex;
             align-items: center;
             gap: 12px;
         }
-
         .btn-chats-mini {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -314,7 +296,6 @@
             border-color: rgba(255, 255, 255, 0.15);
             color: #fff;
         }
-
         .chat-close {
             background: none;
             border: none;
@@ -328,7 +309,6 @@
             color: #aaa;
             transform: rotate(90deg);
         }
-
         .chat-messages {
             flex: 1;
             overflow-y: auto;
@@ -372,7 +352,6 @@
             margin-top: 4px;
             text-align: right;
         }
-
         .chat-input-area {
             display: flex;
             gap: 12px;
@@ -419,8 +398,6 @@
             font-size: 0.9rem;
             margin-top: 40px;
         }
-
-        /* МОДАЛКИ */
         .password-modal,
         .nickname-modal {
             position: fixed;
@@ -557,7 +534,6 @@
             display: block;
             margin-bottom: 4px;
         }
-
         @media (max-width: 500px) {
             .glass-card {
                 padding: 36px 20px 32px;
@@ -602,7 +578,6 @@
                 font-size: 1.4rem;
             }
         }
-
         ::-webkit-scrollbar {
             width: 4px;
         }
@@ -614,7 +589,6 @@
 </head>
 <body>
 
-    <!-- ГЛАВНАЯ -->
     <div class="glass-card" id="mainCard">
         <span class="sticker-baby">👶</span>
         <h1>Пупс чат</h1>
@@ -623,7 +597,6 @@
         <button class="btn-chats" id="openMenuBtn">💬 Чаты</button>
     </div>
 
-    <!-- МЕНЮ -->
     <div class="side-menu" id="sideMenu">
         <div class="menu-header">
             <h2>💬 Чаты</h2>
@@ -633,7 +606,6 @@
         <div class="menu-footer">🔐 пароли — <a href="https://t.me/rcvpg" target="_blank">@rcvpg</a></div>
     </div>
 
-    <!-- ЧАТ -->
     <div class="chat-window" id="chatWindow">
         <div class="chat-header">
             <div class="chat-title">
@@ -654,7 +626,6 @@
         </div>
     </div>
 
-    <!-- МОДАЛКА ПАРОЛЯ -->
     <div class="password-modal" id="passwordModal">
         <div class="password-modal-content">
             <span class="sticker-lock">🔐</span>
@@ -669,7 +640,6 @@
         </div>
     </div>
 
-    <!-- МОДАЛКА ПСЕВДОНИМА -->
     <div class="nickname-modal" id="nicknameModal">
         <div class="nickname-modal-content">
             <span class="sticker-baby-big">👶</span>
@@ -681,9 +651,8 @@
     </div>
 
     <script>
-        console.log('🚀 СКРИПТ ЗАПУЩЕН!');
+        console.log('🚀 Пупс чат запущен');
 
-        // ============ FIREBASE ============
         const firebaseConfig = {
             apiKey: "AIzaSyDLbYzjQBqtjRAlR6-CZj2TZXJgb2Esz4M",
             authDomain: "plumhez.firebaseapp.com",
@@ -704,7 +673,6 @@
             console.error('❌ Ошибка Firebase:', e);
         }
 
-        // ============ ДАННЫЕ ============
         const CHATS = [
             { id: 'general', name: 'Общий', emoji: '🌐', badge: 'все', password: null },
             { id: 'general2', name: 'Общий #2', emoji: '🔹', badge: '🔒', password: 'pupsland.on.top' },
@@ -716,8 +684,8 @@
         let unlockedChats = JSON.parse(localStorage.getItem('pups_unlocked') || '[]');
         let currentChatId = null;
         let messagesListener = null;
+        let pendingChatId = null;
 
-        // ============ ЭЛЕМЕНТЫ ============
         const nicknameModal = document.getElementById('nicknameModal');
         const nicknameInput = document.getElementById('nicknameInput');
         const setNickBtn = document.getElementById('setNickBtn');
@@ -744,13 +712,7 @@
         const chatCloseBtn = document.getElementById('chatCloseBtn');
         const openMenuFromChatBtn = document.getElementById('openMenuFromChatBtn');
 
-        let pendingChatId = null;
-
-        console.log('📦 Элементы загружены');
-
-        // ============ ПСЕВДОНИМ ============
         function showNicknameModal() {
-            console.log('👤 Показываем модалку псевдонима');
             nicknameModal.classList.add('active');
             nicknameInput.value = currentNickname || '';
             nicknameInput.focus();
@@ -773,7 +735,6 @@
             console.log('👤 Псевдоним сохранён:', currentNickname);
         }
 
-        // ============ ПАРОЛИ ============
         function isChatUnlocked(chatId) {
             return unlockedChats.includes(chatId);
         }
@@ -816,21 +777,17 @@
             }
         }
 
-        // ============ ОТРИСОВКА СПИСКА ЧАТОВ ============
         function renderChats() {
-            console.log('📋 Рендерим список чатов');
             chatList.innerHTML = '';
             CHATS.forEach(chat => {
                 const unlocked = isChatUnlocked(chat.id) || !chat.password;
                 const div = document.createElement('div');
-                div.className = `chat-item ${unlocked ? 'unlocked' : 'locked'}`;
-                div.innerHTML = `
-                    <span class="emoji-badge">${chat.emoji}</span>
-                    <span class="chat-name">${chat.name}</span>
-                    <span class="chat-badge">${unlocked ? '✅' : '🔒'}</span>
-                `;
-                div.addEventListener('click', () => {
-                    console.log('📨 Клик по чату:', chat.name);
+                div.className = 'chat-item ' + (unlocked ? 'unlocked' : 'locked');
+                div.innerHTML =
+                    '<span class="emoji-badge">' + chat.emoji + '</span>' +
+                    '<span class="chat-name">' + chat.name + '</span>' +
+                    '<span class="chat-badge">' + (unlocked ? '✅' : '🔒') + '</span>';
+                div.addEventListener('click', function() {
                     if (!currentNickname) {
                         alert('Сначала укажите псевдоним!');
                         showNicknameModal();
@@ -840,12 +797,9 @@
                 });
                 chatList.appendChild(div);
             });
-            console.log('📋 Чатов отрисовано:', CHATS.length);
         }
 
-        // ============ ОТКРЫТЬ ЧАТ ============
         function openChat(chatId) {
-            console.log('📨 Открываем чат:', chatId);
             const chat = CHATS.find(c => c.id === chatId);
             if (!chat) return;
 
@@ -869,7 +823,8 @@
 
             if (database) {
                 const messagesRef = firebase.database().ref('chats/' + chatId + '/messages');
-                messagesListener = messagesRef.orderByChild('timestamp').limitToLast(100).on('child_added', (snapshot) => {
+                messagesListener = messagesRef.orderByChild('timestamp').limitToLast(100).on('child_added', function(
+                snapshot) {
                     const data = snapshot.val();
                     const emptyEl = chatMessages.querySelector('.empty-chat');
                     if (emptyEl) emptyEl.remove();
@@ -877,7 +832,7 @@
                 });
 
                 const chatRef = firebase.database().ref('chats/' + chatId);
-                chatRef.once('value', (snap) => {
+                chatRef.once('value', function(snap) {
                     if (!snap.exists()) {
                         chatRef.set({ created: Date.now() });
                     }
@@ -889,27 +844,24 @@
             closeMenu();
         }
 
-        // ============ ДОБАВИТЬ СООБЩЕНИЕ ============
         function addMessageToChat(user, text, timestamp, isOwn) {
             const div = document.createElement('div');
-            div.className = `chat-message ${isOwn ? 'own' : 'other'}`;
+            div.className = 'chat-message ' + (isOwn ? 'own' : 'other');
 
             const time = new Date(timestamp).toLocaleTimeString('ru-RU', {
                 hour: '2-digit',
                 minute: '2-digit'
             });
 
-            div.innerHTML = `
-                <div class="msg-user">${user || 'Аноним'}</div>
-                <div class="msg-text">${text}</div>
-                <div class="msg-time">${time}</div>
-            `;
+            div.innerHTML =
+                '<div class="msg-user">' + (user || 'Аноним') + '</div>' +
+                '<div class="msg-text">' + text + '</div>' +
+                '<div class="msg-time">' + time + '</div>';
 
             chatMessages.appendChild(div);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // ============ ОТПРАВИТЬ СООБЩЕНИЕ ============
         function sendMessage() {
             const text = chatInput.value.trim();
             if (!text || !currentChatId || !database) return;
@@ -930,22 +882,18 @@
             chatInput.focus();
         }
 
-        // ============ УПРАВЛЕНИЕ МЕНЮ ============
         function openMenu() {
-            console.log('📋 ОТКРЫВАЕМ МЕНЮ!');
             sideMenu.classList.add('open');
             document.body.classList.add('menu-open');
             renderChats();
         }
 
         function closeMenu() {
-            console.log('📋 Закрываем меню');
             sideMenu.classList.remove('open');
             document.body.classList.remove('menu-open');
         }
 
         function closeChat() {
-            console.log('📨 Закрываем чат');
             chatWindow.classList.remove('open');
             document.body.classList.remove('chat-open');
             if (messagesListener) {
@@ -955,24 +903,48 @@
             currentChatId = null;
         }
 
-        // ============ ИНИЦИАЛИЗАЦИЯ ============
-        console.log('🚀 Начинаем инициализацию...');
-
-        // Псевдоним
+        // ИНИЦИАЛИЗАЦИЯ
         if (currentNickname) {
             nicknameDisplay.textContent = currentNickname;
-            console.log('👤 Псевдоним загружен:', currentNickname);
         } else {
-            console.log('👤 Псевдоним не найден, показываем модалку');
             showNicknameModal();
         }
-
-        // Кнопки
-        console.log('🔗 Навешиваем обработчики...');
 
         setNickBtn.addEventListener('click', setNickname);
         nicknameInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') setNickname();
         });
 
-        passwordConfirm.addEventListener('click', try
+        passwordConfirm.addEventListener('click', tryPassword);
+        passwordCancel.addEventListener('click', hidePasswordModal);
+        passwordInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') tryPassword();
+            if (e.key === 'Escape') hidePasswordModal();
+        });
+        passwordModal.addEventListener('click', function(e) {
+            if (e.target === passwordModal) hidePasswordModal();
+        });
+
+        openMenuBtn.addEventListener('click', openMenu);
+        openMenuFromChatBtn.addEventListener('click', openMenu);
+        closeMenuBtn.addEventListener('click', closeMenu);
+
+        chatSendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+        chatCloseBtn.addEventListener('click', closeChat);
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+                closeChat();
+                hidePasswordModal();
+            }
+        });
+
+        renderChats();
+        console.log('✅ Пупс чат готов!');
+    </script>
+</body>
+</html>
