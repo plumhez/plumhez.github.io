@@ -665,7 +665,7 @@
             measurementId: "G-QH35KQ4ZLD"
         };
 
-        // ============ ПОДКЛЮЧЕНИЕ ============
+        // ============ ПОДКЛЮЧЕНИЕ FIREBASE ============
         let database = null;
         let dbReady = false;
 
@@ -674,7 +674,6 @@
             database = firebase.database();
             console.log('✅ Firebase инициализирована');
 
-            // Ждём соединение
             const connectedRef = firebase.database().ref('.info/connected');
             connectedRef.on('value', function(snap) {
                 if (snap.val() === true) {
@@ -686,52 +685,65 @@
                 }
             });
 
+            // Тестовая запись
+            setTimeout(function() {
+                if (database) {
+                    firebase.database().ref('test').set({
+                        message: 'Пупс чат работает!',
+                        timestamp: Date.now()
+                    }).then(function() {
+                        console.log('✅ Тестовая запись создана');
+                    }).catch(function(err) {
+                        console.warn('⚠️ Ошибка теста:', err);
+                    });
+                }
+            }, 2000);
+
         } catch (e) {
             console.error('❌ Ошибка Firebase:', e);
             database = null;
         }
 
         // ============ ДАННЫЕ ЧАТОВ ============
-        const CHATS = [
+        var CHATS = [
             { id: 'general', name: 'Общий', emoji: '🌐', badge: 'все', password: null },
             { id: 'general2', name: 'Общий #2', emoji: '🔹', badge: '🔒', password: 'pupsland.on.top' },
             { id: 'general3', name: 'Общий #3', emoji: '🔸', badge: '🔒', password: 'spworld.soset' },
             { id: 'general4', name: 'Общий #4', emoji: '🟣', badge: '🔒', password: 'plumhez.pidor' }
         ];
 
-        let currentNickname = localStorage.getItem('pups_nickname') || '';
-        let unlockedChats = JSON.parse(localStorage.getItem('pups_unlocked') || '[]');
-        let currentChatId = null;
-        let messagesListener = null;
+        var currentNickname = localStorage.getItem('pups_nickname') || '';
+        var unlockedChats = JSON.parse(localStorage.getItem('pups_unlocked') || '[]');
+        var currentChatId = null;
+        var messagesListener = null;
+        var pendingChatId = null;
 
         // ============ ЭЛЕМЕНТЫ ============
-        const nicknameModal = document.getElementById('nicknameModal');
-        const nicknameInput = document.getElementById('nicknameInput');
-        const setNickBtn = document.getElementById('setNickBtn');
-        const nicknameDisplay = document.getElementById('nicknameDisplay');
+        var nicknameModal = document.getElementById('nicknameModal');
+        var nicknameInput = document.getElementById('nicknameInput');
+        var setNickBtn = document.getElementById('setNickBtn');
+        var nicknameDisplay = document.getElementById('nicknameDisplay');
 
-        const passwordModal = document.getElementById('passwordModal');
-        const passwordInput = document.getElementById('passwordInput');
-        const passwordError = document.getElementById('passwordError');
-        const passwordChatName = document.getElementById('passwordChatName');
-        const passwordConfirm = document.getElementById('passwordConfirm');
-        const passwordCancel = document.getElementById('passwordCancel');
+        var passwordModal = document.getElementById('passwordModal');
+        var passwordInput = document.getElementById('passwordInput');
+        var passwordError = document.getElementById('passwordError');
+        var passwordChatName = document.getElementById('passwordChatName');
+        var passwordConfirm = document.getElementById('passwordConfirm');
+        var passwordCancel = document.getElementById('passwordCancel');
 
-        const chatList = document.getElementById('chatList');
-        const openMenuBtn = document.getElementById('openMenuBtn');
-        const closeMenuBtn = document.getElementById('closeMenuBtn');
-        const sideMenu = document.getElementById('sideMenu');
+        var chatList = document.getElementById('chatList');
+        var openMenuBtn = document.getElementById('openMenuBtn');
+        var closeMenuBtn = document.getElementById('closeMenuBtn');
+        var sideMenu = document.getElementById('sideMenu');
 
-        const chatWindow = document.getElementById('chatWindow');
-        const chatWindowTitle = document.getElementById('chatWindowTitle');
-        const chatWindowEmoji = document.getElementById('chatWindowEmoji');
-        const chatMessages = document.getElementById('chatMessages');
-        const chatInput = document.getElementById('chatInput');
-        const chatSendBtn = document.getElementById('chatSendBtn');
-        const chatCloseBtn = document.getElementById('chatCloseBtn');
-        const openMenuFromChatBtn = document.getElementById('openMenuFromChatBtn');
-
-        let pendingChatId = null;
+        var chatWindow = document.getElementById('chatWindow');
+        var chatWindowTitle = document.getElementById('chatWindowTitle');
+        var chatWindowEmoji = document.getElementById('chatWindowEmoji');
+        var chatMessages = document.getElementById('chatMessages');
+        var chatInput = document.getElementById('chatInput');
+        var chatSendBtn = document.getElementById('chatSendBtn');
+        var chatCloseBtn = document.getElementById('chatCloseBtn');
+        var openMenuFromChatBtn = document.getElementById('openMenuFromChatBtn');
 
         // ============ ПСЕВДОНИМ ============
         function showNicknameModal() {
@@ -745,7 +757,7 @@
         }
 
         function setNickname() {
-            const val = nicknameInput.value.trim();
+            var val = nicknameInput.value.trim();
             if (val.length < 2) {
                 alert('Псевдоним должен быть хотя бы 2 символа');
                 return;
@@ -759,11 +771,11 @@
 
         // ============ ПАРОЛИ ============
         function isChatUnlocked(chatId) {
-            return unlockedChats.includes(chatId);
+            return unlockedChats.indexOf(chatId) !== -1;
         }
 
         function unlockChat(chatId) {
-            if (!unlockedChats.includes(chatId)) {
+            if (unlockedChats.indexOf(chatId) === -1) {
                 unlockedChats.push(chatId);
                 localStorage.setItem('pups_unlocked', JSON.stringify(unlockedChats));
             }
@@ -775,7 +787,7 @@
             passwordInput.value = '';
             passwordError.textContent = '';
             passwordModal.classList.add('active');
-            setTimeout(() => passwordInput.focus(), 100);
+            setTimeout(function() { passwordInput.focus(); }, 100);
         }
 
         function hidePasswordModal() {
@@ -784,8 +796,8 @@
         }
 
         function tryPassword() {
-            const entered = passwordInput.value.trim();
-            const chat = CHATS.find(c => c.id === pendingChatId);
+            var entered = passwordInput.value.trim();
+            var chat = CHATS.find(function(c) { return c.id === pendingChatId; });
             if (!chat) return;
 
             if (entered === chat.password) {
@@ -803,9 +815,9 @@
         // ============ ОТРИСОВКА ЧАТОВ ============
         function renderChats() {
             chatList.innerHTML = '';
-            CHATS.forEach(chat => {
-                const unlocked = isChatUnlocked(chat.id) || !chat.password;
-                const div = document.createElement('div');
+            CHATS.forEach(function(chat) {
+                var unlocked = isChatUnlocked(chat.id) || !chat.password;
+                var div = document.createElement('div');
                 div.className = 'chat-item ' + (unlocked ? 'unlocked' : 'locked');
                 div.innerHTML =
                     '<span class="emoji-badge">' + chat.emoji + '</span>' +
@@ -833,7 +845,7 @@
 
         // ============ ОТКРЫТЬ ЧАТ ============
         function openChat(chatId) {
-            const chat = CHATS.find(c => c.id === chatId);
+            var chat = CHATS.find(function(c) { return c.id === chatId; });
             if (!chat) return;
 
             if (chat.password && !isChatUnlocked(chat.id)) {
@@ -852,27 +864,25 @@
             chatMessages.innerHTML = '<div class="empty-chat">⏳ Загрузка...</div>';
 
             if (database && dbReady) {
-                const messagesRef = firebase.database().ref('chats/' + chatId + '/messages');
+                var messagesRef = firebase.database().ref('chats/' + chatId + '/messages');
 
-                // Слушаем новые сообщения
                 messagesListener = messagesRef.orderByChild('timestamp').limitToLast(100).on('child_added', function(
                     snapshot) {
-                    const data = snapshot.val();
-                    const empty = chatMessages.querySelector('.empty-chat');
+                    var data = snapshot.val();
+                    var empty = chatMessages.querySelector('.empty-chat');
                     if (empty) empty.remove();
                     addMessage(data.user, data.text, data.timestamp, data.user === currentNickname);
                 });
 
-                // Загружаем историю
                 messagesRef.orderByChild('timestamp').limitToLast(100).once('value', function(snapshot) {
-                    const empty = chatMessages.querySelector('.empty-chat');
+                    var empty = chatMessages.querySelector('.empty-chat');
                     if (empty) empty.remove();
 
-                    const msgs = [];
+                    var msgs = [];
                     snapshot.forEach(function(child) {
                         msgs.push(child.val());
                     });
-                    msgs.sort((a, b) => a.timestamp - b.timestamp);
+                    msgs.sort(function(a, b) { return a.timestamp - b.timestamp; });
 
                     msgs.forEach(function(data) {
                         addMessage(data.user, data.text, data.timestamp, data.user === currentNickname);
@@ -883,7 +893,6 @@
                     }
                 });
 
-                // Создаём чат если нет
                 firebase.database().ref('chats/' + chatId).once('value', function(snap) {
                     if (!snap.exists()) {
                         firebase.database().ref('chats/' + chatId).set({ created: Date.now() });
@@ -899,10 +908,10 @@
 
         // ============ ДОБАВИТЬ СООБЩЕНИЕ ============
         function addMessage(user, text, timestamp, isOwn) {
-            const div = document.createElement('div');
+            var div = document.createElement('div');
             div.className = 'chat-message ' + (isOwn ? 'own' : 'other');
 
-            const time = new Date(timestamp).toLocaleTimeString('ru-RU', {
+            var time = new Date(timestamp).toLocaleTimeString('ru-RU', {
                 hour: '2-digit',
                 minute: '2-digit'
             });
@@ -918,7 +927,7 @@
 
         // ============ ОТПРАВИТЬ ============
         function sendMessage() {
-            const text = chatInput.value.trim();
+            var text = chatInput.value.trim();
             if (!text || !currentChatId || !database || !dbReady) return;
             if (!currentNickname) {
                 alert('Сначала укажите псевдоним!');
@@ -951,15 +960,4 @@
         function closeChat() {
             detachMessagesListener();
             chatWindow.classList.remove('open');
-            currentChatId = null;
-            chatMessages.innerHTML = '<div class="empty-chat">💬 Сообщений пока нет</div>';
-        }
-
-        // ============ ИНИЦИАЛИЗАЦИЯ ============
-        if (currentNickname) {
-            nicknameDisplay.textContent = currentNickname;
-        } else {
-            showNicknameModal();
-        }
-
-        setNickBtn.addEventListener('click', set
+            currentChatId =
