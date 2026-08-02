@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mortis.com</title>
+    <title>Login - Mortis (Pixel Perfect Recreation)</title>
     <style>
         * {
             box-sizing: border-box;
@@ -21,64 +21,69 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        /* Контейнер теперь шире, чтобы соответствовать пропорциям */
         .wrapper {
-            width: 410px;
+            width: 480px;
         }
 
-        /* Уменьшен шрифт и добавлен сдвиг вправо */
+        /* Заголовок сдвинут и имеет точный размер */
         .main-title {
             color: #ffffff;
-            font-size: 30px;
+            font-size: 32px;
             font-weight: bold;
-            margin-bottom: 16px;
-            margin-left: 20px; /* Сдвиг немного правее */
+            margin-bottom: 22px;
+            margin-left: 20px;
             text-align: left;
         }
 
         .login-card {
             background: linear-gradient(to bottom, #dcdcdc 0%, #ffffff 80%, #ffffff 100%);
-            border-radius: 22px;
-            padding: 24px 28px 28px 28px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border-radius: 18px; /* Точное закругление */
+            padding: 24px 30px 20px 30px; /* Уменьшенные отступы */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
 
         .input-group {
-            margin-bottom: 8px;
+            margin-bottom: 4px; /* Очень маленький отступ между полями */
         }
 
+        /* Текст лейблов стал мельче и "шире" */
         .input-label {
             color: #333333;
-            font-size: 15px;
+            font-size: 13px; /* Меньше шрифт */
             margin-bottom: 4px;
             display: block;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px; /* Текст "чуточку пошире" */
+            font-weight: normal;
         }
 
+        /* Строки ввода теперь очень узкие */
         input[type="text"],
         input[type="password"] {
             width: 100%;
-            height: 28px;
-            background-color: #383838;
-            border: 1px solid #222222;
+            height: 20px; /* Прям узкие, как на фото */
+            background-color: #3d3d3d;
+            border: 1px solid #1a1a1a;
             border-radius: 1px;
             color: #ffffff;
-            padding: 0 8px;
-            font-size: 14px;
+            padding: 0 6px;
+            font-size: 12px; /* Мелкий шрифт */
             outline: none;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
         }
 
+        /* Кнопка стала меньше и аккуратнее */
         .login-button {
             background: linear-gradient(to bottom, #595959 0%, #313131 50%, #1c1c1c 51%, #111111 100%);
             border: 1px solid #0a0a0a;
             color: #b5b5b5;
-            padding: 5px 26px;
-            font-size: 15px;
-            font-weight: bold;
-            border-radius: 6px;
+            padding: 4px 22px; /* Меньше кнопка */
+            font-size: 12px; /* Мелкий шрифт Login */
+            font-weight: normal; /* Менее жирный */
+            border-radius: 4px;
             cursor: pointer;
-            margin-top: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            margin-top: 10px; /* Пододвинуто ближе */
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
             text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.8);
             transition: opacity 0.15s ease;
         }
@@ -90,7 +95,7 @@
 
         .login-button:active {
             transform: translateY(1px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(0, 0, 0, 0.8);
         }
     </style>
 </head>
