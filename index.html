@@ -4,16 +4,13 @@
     <meta charset="utf-8">
     <title>Login</title>
     <style>
-        /* --- Оригинальный CSS Mortis.com --- */
+        /* --- Оригинальный CSS Mortis --- */
         BODY {
             font-family: Arial;
             background-color: #000;
             color: #fff;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
         }
 
         H1 {
@@ -29,9 +26,9 @@
         #main {
             position: relative;
             top: 200px;
+            margin: auto;
             width: 400px;
             padding: 10px;
-            text-align: left;
         }
 
         #login {
@@ -41,7 +38,7 @@
             border-radius: 25px;
             background: linear-gradient(to bottom, #d4d4d4, #fff);
             position: relative;
-            overflow: hidden; /* Чтобы оверлей не вылезал за скругления */
+            overflow: hidden;
         }
 
         input[type=text], input[type=password] {
@@ -49,8 +46,8 @@
             font-family: Arial;
             font-size: 14px;
             color: #fff;
-            padding: 4px;
-            margin-bottom: 4px;
+            padding: 2px;
+            margin-bottom: 2px;
             background-color: #333;
             border: 1px solid #1a1a1a;
             box-sizing: border-box;
@@ -112,7 +109,7 @@
                 <div><input type="submit" name="login_btn" value="Login"></div>
             </form>
 
-            <!-- Оверлей с твоей гифкой -->
+            <!-- Оверлей с гифкой -->
             <div id="easter-egg-overlay">
                 <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExaW8wd2ZxZG0ybWRjcXBvaXR3eXM2ZWN0NTR5aTNxaTd6NXdzbmZpYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oriO0OEd9QIDdllqo/giphy.gif" alt="Cat GIF">
                 <div style="margin-top: 12px; color: #000; font-weight: bold; font-size: 14px;">Meow! 🐾</div>
@@ -134,11 +131,9 @@
                 const username = userInput.value.trim().toLowerCase();
                 const password = passInput.value.trim().toLowerCase();
 
-                // Проверка на логин: cat и пароль: cat
                 if (username === 'cat' && password === 'cat') {
                     overlay.style.display = 'flex';
                     
-                    // Показываем гифку 4 секунды, затем возвращаем форму обратно
                     setTimeout(() => {
                         overlay.style.display = 'none';
                         form.reset();
