@@ -21,9 +21,9 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Пропорциональная ширина карточки */
+        /* Делаем общую форму шире, как в оригинале */
         .wrapper {
-            width: 380px;
+            width: 440px;
         }
 
         .main-title {
@@ -31,54 +31,54 @@
             font-size: 34px;
             font-weight: bold;
             margin-bottom: 18px;
-            margin-left: 12px;
+            margin-left: 28px; /* Выравнивание с краем инпутов */
             text-align: left;
         }
 
         .login-card {
             background: linear-gradient(to bottom, #dcdcdc 0%, #ffffff 80%, #ffffff 100%);
-            border-radius: 20px;
-            padding: 28px 24px 32px 24px;
+            border-radius: 22px;
+            /* Больше отступ снизу (45px), чтобы пространство под кнопкой совпадало с оригиналом */
+            padding: 30px 28px 45px 28px; 
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
         }
 
         .input-group {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .input-label {
             color: #333333;
-            font-size: 15px;
-            margin-bottom: 6px;
+            font-size: 14px;
+            margin-bottom: 4px;
             display: block;
         }
 
-        /* Высота и цвет инпутов как в оригинале */
+        /* Инпуты сделали узкими тонками полосками */
         input[type="text"],
         input[type="password"] {
             width: 100%;
-            height: 28px;
+            height: 22px; /* Очень тонкие инпуты */
             background-color: #383838;
             border: 1px solid #222222;
             border-radius: 1px;
             color: #ffffff;
-            padding: 0 8px;
-            font-size: 14px;
+            padding: 0 6px;
+            font-size: 13px;
             outline: none;
             box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
         }
 
-        /* Та самая идеальная кнопка */
         .login-button {
             background: linear-gradient(to bottom, #595959 0%, #313131 50%, #1c1c1c 51%, #111111 100%);
             border: 1px solid #0a0a0a;
             color: #b5b5b5;
-            padding: 6px 26px;
-            font-size: 15px;
+            padding: 4px 22px;
+            font-size: 14px;
             font-weight: bold;
-            border-radius: 6px;
+            border-radius: 5px;
             cursor: pointer;
-            margin-top: 12px;
+            margin-top: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
             text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.8);
             transition: opacity 0.15s ease;
