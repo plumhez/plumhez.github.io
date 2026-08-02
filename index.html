@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Login Page - Redesign</title>
     <style>
         * {
             box-sizing: border-box;
@@ -19,6 +19,7 @@
             align-items: center;
             min-height: 100vh;
             font-family: Arial, sans-serif;
+            overflow: hidden; /* Чтобы избежать прокрутки, если высота окна мала */
         }
 
         .main-title {
@@ -26,38 +27,48 @@
             font-size: 32px;
             font-weight: bold;
             margin-bottom: 25px;
-            /* Располагаем заголовок слева от контейнера, как на фото */
-            align-self: flex-start; 
-            margin-left: max(20px, calc(50% - 210px));
+            text-align: center; /* Центрируем заголовок */
         }
 
         .login-container {
+            /* Градиентный фон (от светло-серого к белому сверху вниз) */
             background: linear-gradient(to bottom, #dedede 0%, #ffffff 100%);
-            border-radius: 20px;
-            width: 420px;
-            padding: 40px;
-            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+            border-radius: 20px; /* Сильно закругленные углы */
+            
+            /* --- ИЗМЕНЕНИЯ ЗДЕСЬ --- */
+            width: 600px; /* Сделали значительно шире (было 420px) */
+            padding: 25px 40px 30px 40px; /* Уменьшили верхний и нижний padding, чтобы панель была ниже по высоте */
+            /* --------------------- */
+            
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.05); /* Легкая тень */
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px; /* Расстояние между полями */
+            margin-bottom: 20px; /* Уменьшили отступ снизу */
         }
 
         .input-group {
-            margin-bottom: 15px;
+            flex: 1; /* Поля делят ширину поровну */
         }
 
         .input-label {
             color: #333333;
             font-size: 16px;
-            margin-bottom: 8px;
+            margin-bottom: 6px; /* Немного уменьшили */
             display: block;
         }
 
         input[type="text"],
         input[type="password"] {
             width: 100%;
-            height: 35px;
+            height: 35px; /* Сохранили высоту полей */
             background-color: #404040;
             border: none;
             color: #ffffff;
-            padding: 5px 10px;
+            padding: 5px 12px; /* Чуть больше боковой padding */
             font-size: 16px;
             border-radius: 2px;
             outline: none;
@@ -65,17 +76,19 @@
 
         /* Кнопка */
         .login-button {
+            /* Выпуклый градиент (от тёмно-серого к почти чёрному) */
             background: linear-gradient(to bottom, #525252 0%, #212121 100%);
             border: 1px solid #1a1a1a;
             color: #ffffff;
-            padding: 8px 30px;
+            padding: 8px 35px; /* Чуть шире кнопка */
             font-size: 16px;
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
-            margin-top: 10px;
+            display: block;
+            margin: 0 auto; /* Центрируем кнопку */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.1s;
         }
 
         .login-button:hover {
@@ -84,7 +97,7 @@
 
         .login-button:active {
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8);
-            transform: translateY(1px);
+            transform: translateY(1px) scale(0.98);
         }
     </style>
 </head>
@@ -94,14 +107,17 @@
 
     <div class="login-container">
         <form action="#" method="POST">
-            <div class="input-group">
-                <label for="username" class="input-label">Username</label>
-                <input type="text" id="username" name="username">
-            </div>
+            <!-- Разместим Username и Password в одну строку -->
+            <div class="form-row">
+                <div class="input-group">
+                    <label for="username" class="input-label">Username</label>
+                    <input type="text" id="username" name="username" autocomplete="off">
+                </div>
 
-            <div class="input-group">
-                <label for="password" class="input-label">Password</label>
-                <input type="password" id="password" name="password">
+                <div class="input-group">
+                    <label for="password" class="input-label">Password</label>
+                    <input type="password" id="password" name="password">
+                </div>
             </div>
 
             <button type="submit" class="login-button">Login</button>
