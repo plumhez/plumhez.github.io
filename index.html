@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page - Redesign</title>
+    <title>Login</title>
     <style>
         * {
             box-sizing: border-box;
@@ -18,86 +18,83 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            font-family: Arial, sans-serif;
-            overflow: hidden; /* Чтобы избежать прокрутки, если высота окна мала */
+            font-family: Arial, Helvetica, sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
         .main-title {
             color: #ffffff;
-            font-size: 32px;
+            font-size: 38px;
             font-weight: bold;
-            margin-bottom: 25px;
-            text-align: center; /* Центрируем заголовок */
+            margin-bottom: 22px;
+            text-align: center;
+            letter-spacing: -0.5px;
         }
 
-        .login-container {
-            /* Градиентный фон (от светло-серого к белому сверху вниз) */
-            background: linear-gradient(to bottom, #dedede 0%, #ffffff 100%);
-            border-radius: 20px; /* Сильно закругленные углы */
-            
-            /* --- ИЗМЕНЕНИЯ ЗДЕСЬ --- */
-            width: 600px; /* Сделали значительно шире (было 420px) */
-            padding: 25px 40px 30px 40px; /* Уменьшили верхний и нижний padding, чтобы панель была ниже по высоте */
-            /* --------------------- */
-            
-            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.05); /* Легкая тень */
+        .login-card {
+            background: linear-gradient(to bottom, #dedede 0%, #ffffff 70%, #ffffff 100%);
+            border-radius: 24px;
+            width: 580px;
+            padding: 24px 32px 28px 32px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
         }
 
         .form-row {
             display: flex;
-            justify-content: space-between;
-            gap: 20px; /* Расстояние между полями */
-            margin-bottom: 20px; /* Уменьшили отступ снизу */
+            gap: 16px;
+            margin-bottom: 22px;
         }
 
         .input-group {
-            flex: 1; /* Поля делят ширину поровну */
+            flex: 1;
         }
 
         .input-label {
             color: #333333;
-            font-size: 16px;
-            margin-bottom: 6px; /* Немного уменьшили */
+            font-size: 15px;
+            margin-bottom: 6px;
             display: block;
+            font-weight: normal;
         }
 
         input[type="text"],
         input[type="password"] {
             width: 100%;
-            height: 35px; /* Сохранили высоту полей */
-            background-color: #404040;
-            border: none;
-            color: #ffffff;
-            padding: 5px 12px; /* Чуть больше боковой padding */
-            font-size: 16px;
+            height: 38px;
+            background-color: #434343;
+            border: 1px solid #2d2d2d;
             border-radius: 2px;
+            color: #ffffff;
+            padding: 0 10px;
+            font-size: 16px;
             outline: none;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
         }
 
-        /* Кнопка */
+        /* Выпуклая глянцевая кнопка как на фото */
         .login-button {
-            /* Выпуклый градиент (от тёмно-серого к почти чёрному) */
-            background: linear-gradient(to bottom, #525252 0%, #212121 100%);
-            border: 1px solid #1a1a1a;
+            background: linear-gradient(to bottom, #595959 0%, #313131 50%, #1c1c1c 51%, #111111 100%);
+            border: 1px solid #0a0a0a;
             color: #ffffff;
-            padding: 8px 35px; /* Чуть шире кнопка */
-            font-size: 16px;
+            padding: 6px 36px;
+            font-size: 17px;
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
             display: block;
-            margin: 0 auto; /* Центрируем кнопку */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-            transition: background 0.2s, transform 0.1s;
+            margin: 0 auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.8);
+            transition: opacity 0.15s ease;
         }
 
         .login-button:hover {
-            background: linear-gradient(to bottom, #606060 0%, #303030 100%);
+            opacity: 0.9;
         }
 
         .login-button:active {
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8);
-            transform: translateY(1px) scale(0.98);
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(0, 0, 0, 0.8);
         }
     </style>
 </head>
@@ -105,9 +102,8 @@
 
     <h1 class="main-title">Login</h1>
 
-    <div class="login-container">
-        <form action="#" method="POST">
-            <!-- Разместим Username и Password в одну строку -->
+    <div class="login-card">
+        <form action="#" method="POST" onsubmit="event.preventDefault();">
             <div class="form-row">
                 <div class="input-group">
                     <label for="username" class="input-label">Username</label>
