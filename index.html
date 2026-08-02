@@ -17,48 +17,46 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            /* Tahoma дает тот самый более широкий и четкий шрифт текста */
             font-family: Tahoma, Geneva, Verdana, sans-serif;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Точные пропорции формы */
         .wrapper {
-            width: 360px;
+            width: 400px;
         }
 
-        /* Выравнивание заголовка точно по краю инпутов */
+        /* Заголовок Login сдвинут вровень с началом полей ввода */
         .main-title {
             color: #ffffff;
-            font-size: 32px;
+            font-size: 34px;
             font-weight: bold;
-            margin-bottom: 16px;
-            margin-left: 20px;
+            margin-bottom: 18px;
+            margin-left: 36px; /* Выравнивание по левому краю полей */
             text-align: left;
             font-family: Arial, Helvetica, sans-serif;
         }
 
         .login-card {
-            background: linear-gradient(to bottom, #dcdcdc 0%, #ffffff 75%, #ffffff 100%);
-            border-radius: 20px;
-            padding: 24px 20px 36px 20px;
+            background: linear-gradient(to bottom, #dcdcdc 0%, #ffffff 70%, #ffffff 100%);
+            border-radius: 22px;
+            /* Внутренние отступы (Сверху, Справа, Снизу, Слева):
+               Сделали большие боковые поля (36px) и увеличенную высоту (48px сверху/снизу) */
+            padding: 48px 36px 48px 36px; 
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
         }
 
         .input-group {
-            margin-bottom: 6px;
+            margin-bottom: 10px;
         }
 
-        /* Широкий текст над полями */
         .input-label {
             color: #333333;
             font-size: 13px;
-            margin-bottom: 3px;
+            margin-bottom: 4px;
             display: block;
-            letter-spacing: 0.6px; /* Делает текст визуально шире */
+            letter-spacing: 0.5px;
         }
 
-        /* Поля ввода строго нужного размера */
         input[type="text"],
         input[type="password"] {
             width: 100%;
@@ -68,22 +66,21 @@
             border-radius: 1px;
             color: #ffffff;
             padding: 0 6px;
-            font-size: 12px;
+            font-size: 13px;
             outline: none;
             box-shadow: inset 0 1px 2px rgba(0,0,0,0.7);
         }
 
-        /* Кнопка */
         .login-button {
             background: linear-gradient(to bottom, #595959 0%, #313131 50%, #1c1c1c 51%, #111111 100%);
             border: 1px solid #0a0a0a;
             color: #b5b5b5;
-            padding: 4px 20px;
+            padding: 5px 22px;
             font-size: 13px;
             font-weight: bold;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 14px; /* Чуть больший отступ над кнопкой */
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
             text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.8);
             transition: opacity 0.15s ease;
