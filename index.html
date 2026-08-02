@@ -21,62 +21,65 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Общий контейнер для выравнивания заголовка и карточки по левому краю */
+        /* Общая ширина сужена (примерно на 1 см) */
         .wrapper {
-            width: 460px;
+            width: 410px;
         }
 
         .main-title {
             color: #ffffff;
             font-size: 36px;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             text-align: left;
         }
 
         .login-card {
             background: linear-gradient(to bottom, #dcdcdc 0%, #ffffff 80%, #ffffff 100%);
             border-radius: 22px;
-            padding: 30px 35px 35px 35px;
+            padding: 24px 28px 28px 28px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
         }
 
+        /* Сократили отступ между строками */
         .input-group {
-            margin-bottom: 14px;
+            margin-bottom: 8px;
         }
 
         .input-label {
             color: #333333;
             font-size: 15px;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             display: block;
+            letter-spacing: 0.5px; /* Сделали надписи немного шире */
         }
 
+        /* Высота строк стала чуточку меньше */
         input[type="text"],
         input[type="password"] {
             width: 100%;
-            height: 32px;
+            height: 28px;
             background-color: #383838;
             border: 1px solid #222222;
             border-radius: 1px;
             color: #ffffff;
             padding: 0 8px;
-            font-size: 15px;
+            font-size: 14px;
             outline: none;
             box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
         }
 
-        /* Кнопка с вашим стилем, текст сделай слегка серым */
+        /* Кнопка пододвинута ближе к полям */
         .login-button {
             background: linear-gradient(to bottom, #595959 0%, #313131 50%, #1c1c1c 51%, #111111 100%);
             border: 1px solid #0a0a0a;
-            color: #b5b5b5; /* Чуть сероватый цвет текста Login */
-            padding: 6px 28px;
-            font-size: 16px;
+            color: #b5b5b5;
+            padding: 5px 26px;
+            font-size: 15px;
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
-            margin-top: 8px;
+            margin-top: 10px; /* Уменьшен верхний отступ */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
             text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.8);
             transition: opacity 0.15s ease;
