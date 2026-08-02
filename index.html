@@ -1,1 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MORTIS</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
+        body {
+            background-color: #050505;
+            color: #d1d1d1;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 480px;
+            width: 90%;
+            padding: 40px 20px;
+            border: 1px solid #1a1a1a;
+            background-color: #0a0a0a;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        h1 {
+            font-size: 2rem;
+            letter-spacing: 0.3em;
+            margin-bottom: 25px;
+            color: #ffffff;
+            font-weight: normal;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 30px;
+            letter-spacing: 0.1em;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        label {
+            font-size: 0.75rem;
+            color: #888;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            background-color: #000000;
+            border: 1px solid #222222;
+            color: #00ff66;
+            padding: 10px 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #444444;
+        }
+
+        button {
+            margin-top: 10px;
+            background-color: #111111;
+            border: 1px solid #333333;
+            color: #888888;
+            padding: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            border-color: #555555;
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 0.7rem;
+            color: #333333;
+            letter-spacing: 0.05em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>MORTIS</h1>
+        <p class="subtitle">RESTRICTED ACCESS AREA</p>
+
+        <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Access Denied');">
+            <div class="input-group">
+                <label for="username">User ID</label>
+                <input type="text" id="username" name="username" autocomplete="off" required>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Passcode</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit">Authenticate</button>
+        </form>
+
+        <div class="footer">
+            &copy; MORTIS MEDIA. ALL RIGHTS RESERVED.
+        </div>
+    </div>
+
+</body>
+</html>
