@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Mortis (Pixel Perfect Recreation)</title>
+    <title>Login - Mortis</title>
     <style>
         * {
             box-sizing: border-box;
@@ -21,69 +21,65 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Контейнер теперь шире, чтобы соответствовать пропорциям */
+        /* Пропорциональная ширина карточки */
         .wrapper {
-            width: 480px;
+            width: 380px;
         }
 
-        /* Заголовок сдвинут и имеет точный размер */
         .main-title {
             color: #ffffff;
-            font-size: 32px;
+            font-size: 34px;
             font-weight: bold;
-            margin-bottom: 22px;
-            margin-left: 20px;
+            margin-bottom: 18px;
+            margin-left: 12px;
             text-align: left;
         }
 
         .login-card {
             background: linear-gradient(to bottom, #dcdcdc 0%, #ffffff 80%, #ffffff 100%);
-            border-radius: 18px; /* Точное закругление */
-            padding: 24px 30px 20px 30px; /* Уменьшенные отступы */
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            padding: 28px 24px 32px 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
         }
 
         .input-group {
-            margin-bottom: 4px; /* Очень маленький отступ между полями */
+            margin-bottom: 10px;
         }
 
-        /* Текст лейблов стал мельче и "шире" */
         .input-label {
             color: #333333;
-            font-size: 13px; /* Меньше шрифт */
-            margin-bottom: 4px;
+            font-size: 15px;
+            margin-bottom: 6px;
             display: block;
-            letter-spacing: 0.8px; /* Текст "чуточку пошире" */
-            font-weight: normal;
         }
 
-        /* Строки ввода теперь очень узкие */
+        /* Высота и цвет инпутов как в оригинале */
         input[type="text"],
         input[type="password"] {
             width: 100%;
-            height: 20px; /* Прям узкие, как на фото */
-            background-color: #3d3d3d;
-            border: 1px solid #1a1a1a;
+            height: 28px;
+            background-color: #383838;
+            border: 1px solid #222222;
             border-radius: 1px;
             color: #ffffff;
-            padding: 0 6px;
-            font-size: 12px; /* Мелкий шрифт */
+            padding: 0 8px;
+            font-size: 14px;
             outline: none;
-            box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
         }
 
-        /* Кнопка стала меньше и аккуратнее */
+        /* Та самая идеальная кнопка */
         .login-button {
             background: linear-gradient(to bottom, #595959 0%, #313131 50%, #1c1c1c 51%, #111111 100%);
             border: 1px solid #0a0a0a;
             color: #b5b5b5;
-            padding: 4px 22px; /* Меньше кнопка */
-            font-size: 12px; /* Мелкий шрифт Login */
-            font-weight: normal; /* Менее жирный */
-            border-radius: 4px;
+            padding: 6px 26px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 6px;
             cursor: pointer;
-            margin-top: 10px; /* Пододвинуто ближе */
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            margin-top: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
             text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.8);
             transition: opacity 0.15s ease;
         }
@@ -95,7 +91,7 @@
 
         .login-button:active {
             transform: translateY(1px);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(0, 0, 0, 0.8);
         }
     </style>
 </head>
