@@ -93,6 +93,13 @@
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
+
+        #easter-egg-text {
+            margin-top: 12px;
+            color: #000;
+            font-weight: bold;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -109,10 +116,10 @@
                 <div><input type="submit" name="login_btn" value="Login"></div>
             </form>
 
-            <!-- Оверлей с гифкой -->
+            <!-- Оверлей для пасхалок -->
             <div id="easter-egg-overlay">
-                <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExaW8wd2ZxZG0ybWRjcXBvaXR3eXM2ZWN0NTR5aTNxaTd6NXdzbmZpYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oriO0OEd9QIDdllqo/giphy.gif" alt="Cat GIF">
-                <div style="margin-top: 12px; color: #000; font-weight: bold; font-size: 14px;">just cat</div>
+                <img id="easter-egg-img" src="" alt="Secret GIF">
+                <div id="easter-egg-text"></div>
             </div>
 
         </div>
@@ -122,18 +129,41 @@
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('mortis-form');
             const overlay = document.getElementById('easter-egg-overlay');
+            const eggImg = document.getElementById('easter-egg-img');
+            const eggText = document.getElementById('easter-egg-text');
             const userInput = document.getElementById('usr');
             const passInput = document.getElementById('pwd');
+
+            // Список секретных комбинаций
+            const secrets = {
+                'cat:cat': {
+                    img: 'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExaW8wd2ZxZG0ybWRjcXBvaXR3eXM2ZWN0NTR5aTNxaTd6NXdzbmZpYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oriO0OEd9QIDdllqo/giphy.gif',
+                    text: 'котость'
+                },
+                '6:7': {
+                    img: 'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzJoZzB5YmZlOTAwZmltcmF3aGd4OTNuZXF6bTF5bWYxbGQ5N2x0MiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/SciK9UWOR0Tm0A0qGT/giphy.gif',
+                    text: 'сиксевен сикретвей'
+                },
+                'plumhez:boss': {
+                    img: 'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTJtZWFpdmw1NXczNXljam96cWt5eGtxcHIwaGZyOW1oY2h3NGJkYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/SAIJVbtYwb9zylEPDz/giphy.gif',
+                    text: 'главный босс, велий чад а так же тру адам'
+                }
+            };
 
             form.addEventListener('submit', function(event) {
                 event.preventDefault();
 
                 const username = userInput.value.trim().toLowerCase();
                 const password = passInput.value.trim().toLowerCase();
+                const key = `${username}:${password}`;
 
-                if (username === 'cat' && password === 'cat') {
+                // Проверяем, есть ли введенная пара в наших секретах
+                if (secrets[key]) {
+                    eggImg.src = secrets[key].img;
+                    eggText.textContent = secrets[key].text;
                     overlay.style.display = 'flex';
                     
+                    // Показываем на 4 секунды
                     setTimeout(() => {
                         overlay.style.display = 'none';
                         form.reset();
