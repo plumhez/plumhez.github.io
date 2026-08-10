@@ -142,11 +142,16 @@
                 },
                 '6:7': {
                     img: 'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzJoZzB5YmZlOTAwZmltcmF3aGd4OTNuZXF6bTF5bWYxbGQ5N2x0MiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/SciK9UWOR0Tm0A0qGT/giphy.gif',
-                    text: 'сиксевен сикретвей'
+                    text: '67 сикретвей'
                 },
                 'plumhez:boss': {
                     img: 'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTJtZWFpdmw1NXczNXljam96cWt5eGtxcHIwaGZyOW1oY2h3NGJkYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/SAIJVbtYwb9zylEPDz/giphy.gif',
-                    text: 'главный босс, велий чад а так же тру адам'
+                    text: 'пламчез 31 босс тру адам пупс'
+                },
+                // Без пароля (после двоеточия пустота)
+                'signawave:': {
+                    img: 'https://s1.ezgif.com/tmp/ezgif-1a65fa61c0b7261a.gif', // Вставь сюда постоянную ссылку после перезагрузки на Imgur/Giphy
+                    text: 'главный долбаеб сайта'
                 }
             };
 
@@ -157,13 +162,11 @@
                 const password = passInput.value.trim().toLowerCase();
                 const key = `${username}:${password}`;
 
-                // Проверяем, есть ли введенная пара в наших секретах
                 if (secrets[key]) {
                     eggImg.src = secrets[key].img;
                     eggText.textContent = secrets[key].text;
                     overlay.style.display = 'flex';
                     
-                    // Показываем на 4 секунды
                     setTimeout(() => {
                         overlay.style.display = 'none';
                         form.reset();
