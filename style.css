@@ -24,15 +24,12 @@ body {
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.95);
 }
 
-.vhs-glow, .title, label, .file-input-wrapper span, .mortis-btn {
+/* Монохромный стиль с чистым свечением без красного и синего */
+.title, label, .file-input-wrapper span, .mortis-btn {
     font-family: 'VT323', 'Courier New', monospace;
     text-transform: uppercase;
     letter-spacing: 2px;
-    text-shadow: 
-        -1.5px 0 2px rgba(255, 0, 80, 0.8),
-         1.5px 0 2px rgba(0, 220, 255, 0.8),
-         0 0 5px rgba(255, 255, 255, 0.4);
-    filter: blur(0.2px);
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
 }
 
 .title {
