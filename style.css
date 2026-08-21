@@ -1,1 +1,17 @@
+.vhs-text {
+    /* Ретро-пиксельный шрифт (запасной 'Courier New') */
+    font-family: 'VT323', 'Courier New', monospace;
+    color: #ffffff;
+    font-size: 28px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    
+    /* Хроматическая аберрация (RGB-сдвиг красного и синего) + свечение */
+    text-shadow: 
+        -2px 0 2px rgba(255, 0, 80, 0.9),  /* Красный сдвиг влево */
+         2px 0 2px rgba(0, 220, 255, 0.9),  /* Голубой сдвиг вправо */
+         0 0 8px rgba(255, 255, 255, 0.6); /* Общее белое свечение */
 
+    /* Легкая размытость для имитации аналогового ТВ */
+    filter: blur(0.4px);
+}
