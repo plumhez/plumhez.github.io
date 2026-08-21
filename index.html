@@ -4,42 +4,156 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mortis</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #000000;
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Карточка точь-в-точь как Login окно на mortis.com */
+        .mortis-card {
+            background-color: #e5e5e5;
+            border-radius: 12px;
+            padding: 24px;
+            width: 320px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .title {
+            color: #000000;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .field {
+            margin-bottom: 12px;
+        }
+
+        .field label {
+            display: block;
+            color: #333333;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        /* Темные кастомные поля ввода */
+        .file-input-wrapper {
+            position: relative;
+            background-color: #3a3a3a;
+            border-radius: 3px;
+            padding: 6px 10px;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .file-input-wrapper span {
+            color: #bbbbbb;
+            font-size: 12px;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        /* Кнопка с глянцевым выпуклым градиентом */
+        .mortis-btn {
+            background: linear-gradient(180deg, #4c4c4c 0%, #1f1f1f 50%, #080808 100%);
+            color: #ffffff;
+            border: 1px solid #111111;
+            border-radius: 5px;
+            padding: 6px 18px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            margin-top: 8px;
+            width: 100%;
+            text-shadow: 0 -1px 0 #000;
+        }
+
+        .mortis-btn:active {
+            background: linear-gradient(180deg, #080808 0%, #1f1f1f 50%, #4c4c4c 100%);
+        }
+
+        /* Ползунок порога */
+        .range-wrapper {
+            margin-top: 10px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: #333333;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-top: 15px;
+            display: block;
+            border: 1px solid #ccc;
+        }
+    </style>
 </head>
 <body>
 
-<div class="mortis-panel">
-    <h2>Image Processor</h2>
-    
-    <div class="form-group">
-        <label for="imageLoader">Select File</label>
-        <input type="file" id="imageLoader" accept="image/*">
+<div class="mortis-card">
+    <div class="title">Image Convert</div>
+
+    <div class="field">
+        <label>Select Photo</label>
+        <div class="file-input-wrapper">
+            <span id="fileName">Choose File...</span>
+            <input type="file" id="imageLoader" accept="image/*">
+        </div>
     </div>
 
-    <div class="form-group">
-        <label for="threshold">Threshold</label>
+    <div class="field range-wrapper">
+        <label>Contrast Threshold</label>
         <input type="range" id="threshold" min="0" max="255" value="128">
     </div>
 
-    <button id="processBtn" class="mortis-btn">Process</button>
     <button id="downloadBtn" class="mortis-btn" style="display: none;">Download</button>
 
-    <div class="canvas-wrapper">
-        <canvas id="imageCanvas"></canvas>
-    </div>
+    <canvas id="imageCanvas"></canvas>
 </div>
 
 <script>
     const imageLoader = document.getElementById('imageLoader');
+    const fileNameSpan = document.getElementById('fileName');
     const canvas = document.getElementById('imageCanvas');
     const ctx = canvas.getContext('2d');
     const thresholdSlider = document.getElementById('threshold');
-    const processBtn = document.getElementById('processBtn');
     const downloadBtn = document.getElementById('downloadBtn');
 
     let currentImg = null;
 
     imageLoader.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        fileNameSpan.textContent = file.name;
+
         const reader = new FileReader();
         reader.onload = (event) => {
             currentImg = new Image();
@@ -51,10 +165,9 @@
             };
             currentImg.src = event.target.result;
         };
-        if (e.target.files[0]) reader.readAsDataURL(e.target.files[0]);
+        reader.readAsDataURL(file);
     });
 
-    processBtn.addEventListener('click', processImage);
     thresholdSlider.addEventListener('input', processImage);
 
     function processImage() {
@@ -79,7 +192,7 @@
 
     downloadBtn.addEventListener('click', () => {
         const link = document.createElement('a');
-        link.download = 'binary_mortis.png';
+        link.download = 'binary_photo.png';
         link.href = canvas.toDataURL('image/png');
         link.click();
     });
