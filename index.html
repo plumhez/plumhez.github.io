@@ -1,183 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="utf-8">
-    <title>Login</title>
-    <style>
-        /* --- Оригинальный CSS Mortis --- */
-        BODY {
-            font-family: Arial;
-            background-color: #000;
-            color: #fff;
-            margin: 0;
-            padding: 0;
-        }
-
-        H1 {
-            padding-left: 20px;
-            margin-top: 0;
-            margin-bottom: 10px;
-        }
-
-        DIV {
-            padding: 2px;
-        }
-
-        #main {
-            position: relative;
-            top: 200px;
-            margin: auto;
-            width: 400px;
-            padding: 10px;
-        }
-
-        #login {
-            color: #000;
-            padding: 40px;
-            background-color: #fff;
-            border-radius: 25px;
-            background: linear-gradient(to bottom, #d4d4d4, #fff);
-            position: relative;
-            overflow: hidden;
-        }
-
-        input[type=text], input[type=password] {
-            width: 100%;
-            font-family: Arial;
-            font-size: 14px;
-            color: #fff;
-            padding: 2px;
-            margin-bottom: 2px;
-            background-color: #333;
-            border: 1px solid #1a1a1a;
-            box-sizing: border-box;
-        }
-
-        input[type=submit] {
-            font-family: Arial;
-            font-size: 16px;
-            font-weight: bold;
-            color: #999;
-            width: 90px;
-            padding: 5px;
-            border: #000 solid 1px;
-            border-radius: 8px;
-            background: linear-gradient(to bottom, #666, #000);
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        input[type=submit]:hover {
-            color: #fff;
-        }
-
-        /* --- Стили пасхалки --- */
-        #easter-egg-overlay {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #ffffff;
-            border-radius: 25px;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            z-index: 10;
-        }
-
-        #easter-egg-overlay img {
-            max-width: 85%;
-            max-height: 75%;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        #easter-egg-text {
-            margin-top: 12px;
-            color: #000;
-            font-weight: bold;
-            font-size: 14px;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MORTIS // BINARY PROCESSOR</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="main">
-        <h1>Login</h1>
-        <div id="login">
-            
-            <form id="mortis-form" method="post" action="/">
-                <div>Username</div>
-                <div><input type="text" name="login_usr" id="usr" autocomplete="off"></div>
-                <div>Password</div>
-                <div><input type="password" name="login_pwd" id="pwd"></div>
-                <div><input type="submit" name="login_btn" value="Login"></div>
-            </form>
+<div class="container">
+    <h1>[ BINARY CONVERTER ]</h1>
+    
+    <div class="controls">
+        <label for="imageLoader" class="custom-file-upload">
+            SELECT IMAGE
+        </label>
+        <input type="file" id="imageLoader" accept="image/*">
 
-            <!-- Оверлей для пасхалок -->
-            <div id="easter-egg-overlay">
-                <img id="easter-egg-img" src="" alt="Secret GIF">
-                <div id="easter-egg-text"></div>
-            </div>
-
+        <div class="slider-group">
+            <label for="threshold">THRESHOLD LEVEL: <span id="thresholdValue">128</span></label>
+            <input type="range" id="threshold" min="0" max="255" value="128">
         </div>
+
+        <button id="downloadBtn" style="display: none;">DOWNLOAD RESULT</button>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('mortis-form');
-            const overlay = document.getElementById('easter-egg-overlay');
-            const eggImg = document.getElementById('easter-egg-img');
-            const eggText = document.getElementById('easter-egg-text');
-            const userInput = document.getElementById('usr');
-            const passInput = document.getElementById('pwd');
+    <canvas id="imageCanvas"></canvas>
+</div>
 
-            // Список секретных комбинаций
-            const secrets = {
-                'cat:cat': {
-                    img: 'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExaW8wd2ZxZG0ybWRjcXBvaXR3eXM2ZWN0NTR5aTNxaTd6NXdzbmZpYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oriO0OEd9QIDdllqo/giphy.gif',
-                    text: 'котость'
-                },
-                '6:7': {
-                    img: 'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzJoZzB5YmZlOTAwZmltcmF3aGd4OTNuZXF6bTF5bWYxbGQ5N2x0MiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/SciK9UWOR0Tm0A0qGT/giphy.gif',
-                    text: '67 сикретвей'
-                },
-                'plumhez:boss': {
-                    img: 'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTJtZWFpdmw1NXczNXljam96cWt5eGtxcHIwaGZyOW1oY2h3NGJkYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/SAIJVbtYwb9zylEPDz/giphy.gif',
-                    text: 'пламчез 31 босс тру адам пупс'
-                },
-                // Без пароля (после двоеточия пустота)
-                'signawave:': {
-                    img: 'https://s1.ezgif.com/tmp/ezgif-1a65fa61c0b7261a.gif', // Вставь сюда постоянную ссылку после перезагрузки на Imgur/Giphy
-                    text: 'главный долбаеб сайта'
-                }
-            };
+<script>
+    const imageLoader = document.getElementById('imageLoader');
+    const canvas = document.getElementById('imageCanvas');
+    const ctx = canvas.getContext('2d');
+    const thresholdSlider = document.getElementById('threshold');
+    const thresholdValue = document.getElementById('thresholdValue');
+    const downloadBtn = document.getElementById('downloadBtn');
 
-            form.addEventListener('submit', function(event) {
-                event.preventDefault();
+    let currentImg = null;
 
-                const username = userInput.value.trim().toLowerCase();
-                const password = passInput.value.trim().toLowerCase();
-                const key = `${username}:${password}`;
+    imageLoader.addEventListener('change', handleImage, false);
+    thresholdSlider.addEventListener('input', processImage);
+    downloadBtn.addEventListener('click', downloadImage);
 
-                if (secrets[key]) {
-                    eggImg.src = secrets[key].img;
-                    eggText.textContent = secrets[key].text;
-                    overlay.style.display = 'flex';
-                    
-                    setTimeout(() => {
-                        overlay.style.display = 'none';
-                        form.reset();
-                    }, 4000);
-                } else {
-                    alert('Login failed');
-                    form.reset();
-                }
-            });
-        });
-    </script>
+    function handleImage(e) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            currentImg = new Image();
+            currentImg.onload = function() {
+                canvas.width = currentImg.width;
+                canvas.height = currentImg.height;
+                processImage();
+                downloadBtn.style.display = 'inline-block';
+            }
+            currentImg.src = event.target.result;
+        }
+        if (e.target.files[0]) {
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    }
+
+    function processImage() {
+        if (!currentImg) return;
+
+        const threshold = parseInt(thresholdSlider.value);
+        thresholdValue.innerText = threshold;
+
+        ctx.drawImage(currentImg, 0, 0);
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imgData.data;
+
+        for (let i = 0; i < data.length; i += 4) {
+            const avg = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+            const binary = avg >= threshold ? 255 : 0;
+
+            data[i]     = binary;
+            data[i + 1] = binary;
+            data[i + 2] = binary;
+        }
+
+        ctx.putImageData(imgData, 0, 0);
+    }
+
+    function downloadImage() {
+        const link = document.createElement('a');
+        link.download = 'binary_mortis.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    }
+</script>
 
 </body>
 </html>
