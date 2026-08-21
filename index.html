@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mortis</title>
+    <title>Mortis // Image Processor</title>
+    <!-- Подключение VHS пиксельного шрифта -->
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    
     <style>
         * {
             box-sizing: border-box;
@@ -21,21 +24,42 @@
             padding: 20px;
         }
 
-        /* Карточка точь-в-точь как Login окно на mortis.com */
+        /* Окно в стиле mortis.com */
         .mortis-card {
             background-color: #e5e5e5;
             border-radius: 12px;
             padding: 24px;
-            width: 320px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            width: 340px;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.7);
         }
 
-        .title {
+        /* Заголовок карточки */
+        .card-title {
             color: #000000;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
             margin-bottom: 16px;
             letter-spacing: -0.5px;
+        }
+
+        /* Эффект VHS текста над полем ввода */
+        .vhs-text {
+            font-family: 'VT323', 'Courier New', monospace;
+            color: #ffffff;
+            font-size: 22px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            background-color: #0d0d0d;
+            padding: 6px 10px;
+            border-radius: 4px;
+            margin-bottom: 14px;
+            display: inline-block;
+            width: 100%;
+            text-shadow: 
+                -2px 0 2px rgba(255, 0, 80, 0.8),
+                 2px 0 2px rgba(0, 220, 255, 0.8),
+                 0 0 6px rgba(255, 255, 255, 0.5);
+            filter: blur(0.3px);
         }
 
         .field {
@@ -50,12 +74,12 @@
             margin-bottom: 4px;
         }
 
-        /* Темные кастомные поля ввода */
+        /* Поле выбора файла в стиле Mortis */
         .file-input-wrapper {
             position: relative;
             background-color: #3a3a3a;
             border-radius: 3px;
-            padding: 6px 10px;
+            padding: 8px 10px;
             cursor: pointer;
             text-align: left;
         }
@@ -75,27 +99,7 @@
             cursor: pointer;
         }
 
-        /* Кнопка с глянцевым выпуклым градиентом */
-        .mortis-btn {
-            background: linear-gradient(180deg, #4c4c4c 0%, #1f1f1f 50%, #080808 100%);
-            color: #ffffff;
-            border: 1px solid #111111;
-            border-radius: 5px;
-            padding: 6px 18px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
-            margin-top: 8px;
-            width: 100%;
-            text-shadow: 0 -1px 0 #000;
-        }
-
-        .mortis-btn:active {
-            background: linear-gradient(180deg, #080808 0%, #1f1f1f 50%, #4c4c4c 100%);
-        }
-
-        /* Ползунок порога */
+        /* Ползунок порога контраста */
         .range-wrapper {
             margin-top: 10px;
         }
@@ -103,6 +107,26 @@
         input[type="range"] {
             width: 100%;
             accent-color: #333333;
+        }
+
+        /* Глянцевая кнопка Mortis */
+        .mortis-btn {
+            background: linear-gradient(180deg, #4c4c4c 0%, #1f1f1f 50%, #080808 100%);
+            color: #ffffff;
+            border: 1px solid #111111;
+            border-radius: 5px;
+            padding: 8px 18px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            margin-top: 10px;
+            width: 100%;
+            text-shadow: 0 -1px 0 #000;
+        }
+
+        .mortis-btn:active {
+            background: linear-gradient(180deg, #080808 0%, #1f1f1f 50%, #4c4c4c 100%);
         }
 
         canvas {
@@ -118,7 +142,12 @@
 <body>
 
 <div class="mortis-card">
-    <div class="title">Image Convert</div>
+    <div class="card-title">Image Processor</div>
+
+    <!-- Текст с VHS эффектом -->
+    <div class="vhs-text">
+        SYSTEM READY // PROCESS PHOTO
+    </div>
 
     <div class="field">
         <label>Select Photo</label>
@@ -133,7 +162,7 @@
         <input type="range" id="threshold" min="0" max="255" value="128">
     </div>
 
-    <button id="downloadBtn" class="mortis-btn" style="display: none;">Download</button>
+    <button id="downloadBtn" class="mortis-btn" style="display: none;">Download Binary Image</button>
 
     <canvas id="imageCanvas"></canvas>
 </div>
@@ -170,6 +199,7 @@
 
     thresholdSlider.addEventListener('input', processImage);
 
+    // Попиксельный перевод в 1-битный Ч/Б (без полутонов)
     function processImage() {
         if (!currentImg) return;
 
@@ -192,7 +222,7 @@
 
     downloadBtn.addEventListener('click', () => {
         const link = document.createElement('a');
-        link.download = 'binary_photo.png';
+        link.download = 'binary_mortis.png';
         link.href = canvas.toDataURL('image/png');
         link.click();
     });
