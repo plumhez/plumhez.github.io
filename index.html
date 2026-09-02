@@ -2,35 +2,32 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DOOM (1993)</title>
-    <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
-    <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Minecraft 1.8.8 (EaglercraftX)</title>
     <style>
         html, body {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #000;
             overflow: hidden;
+            background-color: #000;
         }
-        #dos {
+        iframe {
             width: 100%;
             height: 100%;
+            border: none;
         }
     </style>
 </head>
 <body>
 
-<div id="dos"></div>
-
-<script>
-    // Браузер сам скачает Doom (Shareware версию) при открытии страницы
-    Dos(document.getElementById("dos"), {
-        url: "https://cdn.dos.zone/custom/dos/doom.jsdos",
-    });
-</script>
+    <!-- Клиент загружается с CDN Eaglercraft, встроенный список серверов уже внутри -->
+    <iframe 
+        src="https://eaglercraft.ru/mc/1.8.8/" 
+        allow="autoplay; fullscreen; microphone; camera; focus-without-user-activation" 
+        allowfullscreen="true">
+    </iframe>
 
 </body>
 </html>
