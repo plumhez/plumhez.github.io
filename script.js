@@ -3,23 +3,15 @@ const ctx = canvas.getContext('2d');
 const fileInput = document.getElementById('file-input');
 const dropZone = document.getElementById('drop-zone');
 const placeholder = document.getElementById('placeholder');
-const buttons = document.querySelectorAll('.btn');
+const buttons = document.querySelectorAll('.controls .btn:not(#btn-glitch)');
+const glitchBtn = document.getElementById('btn-glitch');
 
 let currentImage = null;
-let activeFilter = 'none';
+let activeFilter = 'mandela';
+let glitchEnabled = false;
 
-// Выбор файла
 dropZone.addEventListener('click', () => fileInput.click());
 fileInput.addEventListener('change', handleFile);
-
-dropZone.addEventListener('dragover', (e) => e.preventDefault());
-dropZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    if (e.dataTransfer.files.length) {
-        fileInput.files = e.dataTransfer.files;
-        handleFile();
-    }
-});
 
 function handleFile() {
     const file = fileInput.files[0];
@@ -31,30 +23,39 @@ function handleFile() {
         img.onload = () => {
             currentImage = img;
             placeholder.style.display = 'none';
-            applyCurrentFilter();
+            render();
         };
         img.src = e.target.result;
     };
     reader.readAsDataURL(file);
 }
 
-// Переключение кнопок
+// Фильтры
 buttons.forEach(btn => {
     btn.addEventListener('click', (e) => {
         e.stopPropagation();
         buttons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         activeFilter = btn.dataset.filter;
-        applyCurrentFilter();
+        render();
     });
 });
 
-function applyCurrentFilter() {
+// Кнопка включения/выключения помех
+glitchBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    glitchEnabled = !glitchEnabled;
+    glitchBtn.classList.toggle('active-glitch', glitchEnabled);
+    render();
+});
+
+function render() {
     if (!currentImage) return;
 
-    // Ресайзим canvas под картинку (максимум 640px по ширине для сохранения ретро-качества)
-    const scale = Math.min(1, 640 / currentImage.width);
-    canvas.width = currentImage.width * scale;
+    // Снижаем внутреннее разрешение для эффекта низкого качества VHS
+    const targetWidth = 500;
+    const scale = targetWidth / currentImage.width;
+    canvas.width = targetWidth;
     canvas.height = currentImage.height * scale;
 
     ctx.drawImage(currentImage, 0, 0, canvas.width, canvas.height);
@@ -62,57 +63,94 @@ function applyCurrentFilter() {
     let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     let data = imgData.data;
 
-    if (activeFilter === 'vhs') {
-        // Хроматическая аберрация (сдвиг красного и синего) + мелкий шум
-        let copy = new Uint8ClampedArray(data);
-        const shift = Math.floor(canvas.width * 0.008) * 4;
-        
+    // 1. Стиль Mandela Catalogue (Выбитые тени + ч/б + тяжелое зерно)
+    if (activeFilter === 'mandela') {
         for (let i = 0; i < data.length; i += 4) {
-            // Сдвиг красного канала
-            if (i + shift < data.length) data[i] = copy[i + shift]; 
-            // Добавление шума зернистости
-            let noise = (Math.random() - 0.5) * 40;
-            data[i] = Math.min(255, Math.max(0, data[i] + noise));
-            data[i+1] = Math.min(255, Math.max(0, data[i+1] + noise));
-            data[i+2] = Math.min(255, Math.max(0, data[i+2] + noise));
-        }
-    } 
-    else if (activeFilter === 'cctv') {
-        // Зеленоватый монохром камеры наблюдения с контрастом
-        for (let i = 0; i < data.length; i += 4) {
-            let avg = (data[i] * 0.3 + data[i+1] * 0.59 + data[i+2] * 0.11);
-            avg = avg < 50 ? avg * 0.5 : avg * 1.2; // контраст
-            let noise = (Math.random() - 0.5) * 50;
+            let gray = data[i] * 0.299 + data[i+1] * 0.587 + data[i+2] * 0.114;
             
-            data[i] = Math.max(0, avg * 0.4 + noise);     // Red
-            data[i+1] = Math.min(255, avg + noise + 20); // Green
-            data[i+2] = Math.max(0, avg * 0.4 + noise);   // Blue
+            // Выкручиваем S-кривую контраста (темные области становятся черными)
+            if (gray < 80) {
+                gray = gray * 0.5;
+            } else if (gray > 160) {
+                gray = Math.min(255, gray * 1.25);
+            }
+
+            // Интенсивная зернистость (Film Grain)
+            let grain = (Math.random() - 0.5) * 65;
+            gray = Math.min(255, Math.max(0, gray + grain));
+
+            data[i] = gray;
+            data[i+1] = gray;
+            data[i+2] = gray;
         }
     } 
-    else if (activeFilter === 'threshold') {
-        // 1-битный жесткий порог (Черно-белый газетный/компьютерный стиль)
+    // 2. Альтернативный фильтр "Alternate" (Искажение черных глаз и губ)
+    else if (activeFilter === 'intruder') {
         for (let i = 0; i < data.length; i += 4) {
-            let avg = (data[i] + data[i+1] + data[i+2]) / 3;
-            let v = (avg > 110) ? 255 : 0;
-            data[i] = v;
-            data[i+1] = v;
-            data[i+2] = v;
+            let gray = data[i] * 0.299 + data[i+1] * 0.587 + data[i+2] * 0.114;
+            
+            // Агрессивный порог теней для эффекта "Затемненного лица"
+            gray = gray < 100 ? gray * 0.2 : gray * 1.3;
+
+            let grain = (Math.random() - 0.5) * 45;
+            gray = Math.min(255, Math.max(0, gray + grain));
+
+            data[i] = gray;
+            data[i+1] = gray * 0.95; // Минимальный зеленый оттенок старого кинескопа
+            data[i+2] = gray * 0.9;
         }
-    } 
-    else if (activeFilter === 'thermal') {
-        // Симуляция инфракрасной камеры
-        for (let i = 0; i < data.length; i += 4) {
-            let avg = (data[i] + data[i+1] + data[i+2]) / 3;
-            data[i] = avg > 128 ? 255 : avg * 2;          // R
-            data[i+1] = avg < 128 ? avg * 2 : 255 - avg;  // G
-            data[i+2] = 255 - avg;                        // B
+    }
+
+    ctx.putImageData(imgData, 0, 0);
+
+    // 3. Отдельная функция: генерация помех поверх изображения
+    if (glitchEnabled) {
+        applyVHSGlitch();
+    }
+}
+
+function applyVHSGlitch() {
+    let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let data = imgData.data;
+    const width = canvas.width;
+    const height = canvas.height;
+
+    // 1. Горизонтальный сдвиг полос (Tracking Errors)
+    const numCorruptLines = Math.floor(Math.random() * 8) + 4;
+    for (let i = 0; i < numCorruptLines; i++) {
+        let startY = Math.floor(Math.random() * height);
+        let lineHeight = Math.floor(Math.random() * 6) + 1;
+        let offsetX = (Math.random() - 0.5) * 40; // Смещение по X
+
+        for (let y = startY; y < Math.min(height, startY + lineHeight); y++) {
+            for (let x = 0; x < width; x++) {
+                let sourceX = Math.floor(x + offsetX);
+                if (sourceX >= 0 && sourceX < width) {
+                    let destIdx = (y * width + x) * 4;
+                    let srcIdx = (y * width + sourceX) * 4;
+
+                    data[destIdx] = data[srcIdx];
+                    data[destIdx + 1] = data[srcIdx + 1];
+                    data[destIdx + 2] = data[srcIdx + 2];
+                }
+            }
+        }
+    }
+
+    // 2. Белые шумы и «снег» в нижней части кадра (как на кассетах)
+    for (let i = 0; i < data.length; i += 4) {
+        if (Math.random() < 0.08) { // 8% случайных битых пикселей
+            let noiseVal = Math.random() > 0.5 ? 255 : 0;
+            data[i] = noiseVal;
+            data[i+1] = noiseVal;
+            data[i+2] = noiseVal;
         }
     }
 
     ctx.putImageData(imgData, 0, 0);
 }
 
-// Живые часы на нижней панели
+// Часы
 setInterval(() => {
     const now = new Date();
     document.getElementById('timestamp').innerText = 
