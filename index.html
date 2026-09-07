@@ -3,258 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STRANGER THINGS // HAWKINS ARCHIVE</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Неоновый ретро-шрифт -->
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none;
-        }
-
-        body {
-            background-color: #050005;
-            color: #e0e0e0;
-            font-family: 'VT323', monospace;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            overflow-x: hidden;
-        }
-
-        /* CRT сканлайны и красное свечение из Изнанки (Upside Down) */
-        .crt-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: 
-                radial-gradient(circle, rgba(20, 0, 0, 0.2) 40%, rgba(0, 0, 0, 0.95) 100%),
-                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.5) 50%);
-            background-size: 100% 100%, 100% 4px;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 900px;
-            padding: 20px;
-            position: relative;
-            z-index: 1;
-            text-align: center;
-        }
-
-        /* Неоновый логотип Stranger Things */
-        header {
-            margin: 30px 0;
-        }
-
-        .logo {
-            font-family: 'Press Start 2P', cursive;
-            font-size: 28px;
-            color: #000;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            -webkit-text-stroke: 1.5px #ff1111;
-            text-shadow: 
-                0 0 10px #ff0000,
-                0 0 20px #ff0000,
-                0 0 40px #8b0000;
-            animation: pulse 2.5s infinite alternate;
-        }
-
-        .subtitle {
-            font-size: 18px;
-            color: #888;
-            margin-top: 10px;
-            letter-spacing: 3px;
-        }
-
-        /* Видеоплеер / Область просмотра */
-        .viewport {
-            width: 100%;
-            height: 480px;
-            background: #000;
-            border: 2px solid #330000;
-            box-shadow: 0 0 25px rgba(255, 0, 0, 0.2);
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        /* Выбор сезонов и серий */
-        .controls {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .season-selector, .episode-list {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .btn {
-            background: #110000;
-            border: 1px solid #550000;
-            color: #aa5555;
-            padding: 8px 16px;
-            font-size: 18px;
-            font-family: 'VT323', monospace;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn:hover {
-            background: #330000;
-            color: #ff5555;
-            border-color: #ff0000;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-        }
-
-        .btn.active {
-            background: #ff0000;
-            color: #000;
-            border-color: #fff;
-            font-weight: bold;
-            box-shadow: 0 0 15px #ff0000;
-        }
-
-        footer {
-            margin: 20px 0;
-            font-size: 14px;
-            color: #444;
-            letter-spacing: 1px;
-        }
-
-        @keyframes pulse {
-            0% {
-                text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
-            }
-            100% {
-                text-shadow: 0 0 15px #ff0000, 0 0 35px #ff0000, 0 0 50px #b30000;
-            }
-        }
-    </style>
+    <title>Очень странные дела смотреть онлайн</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="crt-overlay"></div>
+    <!-- Шапка сайта -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="https://via.placeholder.com/140x40/000000/ff0000?text=STRANGER+THINGS" alt="Stranger Things">
+            </div>
+            <nav class="nav">
+                <a href="#" class="nav-link active">Смотреть онлайн ▾</a>
+                <a href="#" class="nav-link">Новости</a>
+                <a href="#" class="btn-yellow">☑ Истории из 85-го</a>
+            </nav>
+        </div>
+    </header>
 
-    <div class="container">
-        <header>
-            <h1 class="logo">STRANGER THINGS</h1>
-            <p class="subtitle">HAWKINS NATIONAL LABORATORY // ARCHIVE</p>
-        </header>
+    <!-- Основной контент -->
+    <div class="main-wrapper">
+        <main class="content">
+            <h1 class="main-title">Очень странные дела смотреть онлайн</h1>
+            <p class="subtitle">Stranger Things</p>
+            <p class="description">
+                «Очень странные дела» — мрачная научно-фантастическая драма, которую стоит смотреть ради пугающей атмосферы и ностальгии по восьмидесятым. История повествует о приключениях детей в маленьком городе, где начинают происходить паранормальные явления.
+            </p>
 
-        <main>
-            <!-- Плеер -->
-            <div class="viewport">
-                <iframe id="player" src="https://www.youtube.com/embed/b9EkMc79ZSU" allowfullscreen></iframe>
+            <!-- Переключатель сезонов (квадратные кнопки) -->
+            <div class="season-tabs">
+                <button class="tab-btn active" data-season="1">1</button>
+                <button class="tab-btn" data-season="2">2</button>
+                <button class="tab-btn" data-season="3">3</button>
+                <button class="tab-btn" data-season="4">4</button>
+                <button class="tab-btn" data-season="5">5</button>
             </div>
 
-            <!-- Управление -->
-            <div class="controls">
-                <!-- Сезоны -->
-                <div class="season-selector">
-                    <button class="btn active" onclick="selectSeason(1)">SEASON 1</button>
-                    <button class="btn" onclick="selectSeason(2)">SEASON 2</button>
-                    <button class="btn" onclick="selectSeason(3)">SEASON 3</button>
-                    <button class="btn" onclick="selectSeason(4)">SEASON 4</button>
-                </div>
+            <div class="voice-tag">LostFilm</div>
 
-                <!-- Серии -->
-                <div class="episode-list" id="episodes">
-                    <!-- Заполняется автоматически через JS -->
-                </div>
+            <!-- Сетка карточек серий -->
+            <div class="episodes-grid" id="episodes-container">
+                <!-- Карточки генерируются динамически из script.js -->
+            </div>
+
+            <div class="info-block">
+                <p>Впереди нас ждёт пятый сезон, который станет последним.</p>
+                <p>Создатели сериала заявили, что долгих завязок не будет и главных героев сразу забросит в гущу событий.</p>
             </div>
         </main>
 
-        <footer>
-            <span>SYSTEM STATUS: ONLINE // CLEARANCE LEVEL 4 REQUIRED</span>
-        </footer>
+        <!-- Правый сайдбар -->
+        <aside class="sidebar">
+            <button class="bookmark-btn">★ Добавить сайт в закладки</button>
+
+            <div class="sidebar-widget">
+                <div class="season-links">
+                    <a href="#" onclick="switchSeason(1)">› 1 сезон</a>
+                    <a href="#" onclick="switchSeason(2)">› 2 сезон</a>
+                    <a href="#" onclick="switchSeason(3)">› 3 сезон</a>
+                    <a href="#" onclick="switchSeason(4)">› 4 сезон</a>
+                    <a href="#" onclick="switchSeason(5)">› 5 сезон</a>
+                </div>
+            </div>
+
+            <div class="sidebar-widget">
+                <h3>До выхода серии:</h3>
+            </div>
+
+            <div class="sidebar-widget">
+                <h3>Последние 3 серии</h3>
+                <div class="mini-cards">
+                    <div class="mini-card">
+                        <!-- ВСТАВЛЯТЬ ССЫЛКУ НА СЕРИЮ СЮДА (превью) -->
+                        <img src="https://via.placeholder.com/240x120/111122/ffffff?text=Истории+из+85-го" alt="Превью">
+                        <span>Очень странные дела: Истории из 85-го ...</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
     </div>
 
-    <script>
-        // База данных серий и видео (ссылки/трейлеры/плееры)
-        const episodesData = {
-            1: [
-                { title: "E01: Vanishing of Will Byers", url: "https://www.youtube.com/embed/b9EkMc79ZSU" },
-                { title: "E02: The Weirdo on Maple St.", url: "https://www.youtube.com/embed/R1ZXOOLMJ8w" },
-                { title: "E03: Holly, Jolly", url: "https://www.youtube.com/embed/b9EkMc79ZSU" },
-                { title: "E04: The Body", url: "https://www.youtube.com/embed/R1ZXOOLMJ8w" }
-            ],
-            2: [
-                { title: "E01: MADMAX", url: "https://www.youtube.com/embed/vgS2L7WPIO4" },
-                { title: "E02: Trick or Treat, Freak", url: "https://www.youtube.com/embed/vgS2L7WPIO4" }
-            ],
-            3: [
-                { title: "E01: Suzie, Do You Copy?", url: "https://www.youtube.com/embed/YEG3bmU_WaE" },
-                { title: "E02: The Mall Rats", url: "https://www.youtube.com/embed/YEG3bmU_WaE" }
-            ],
-            4: [
-                { title: "E01: The Hellfire Club", url: "https://www.youtube.com/embed/yQEondeGvKo" },
-                { title: "E02: Vecna's Curse", url: "https://www.youtube.com/embed/yQEondeGvKo" }
-            ]
-        };
+    <!-- Модальное окно с видеоплеером -->
+    <div class="modal" id="player-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <div class="iframe-container">
+                <!-- ВСТАВЛЯТЬ ССЫЛКУ НА СЕРИЮ СЮДА (автоматически подставляется скриптом в src) -->
+                <iframe id="video-iframe" src="" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
 
-        let currentSeason = 1;
-
-        function selectSeason(seasonNum) {
-            currentSeason = seasonNum;
-            
-            // Обновляем активную кнопку сезона
-            const seasonBtns = document.querySelectorAll('.season-selector .btn');
-            seasonBtns.forEach((btn, idx) => {
-                btn.classList.toggle('active', idx + 1 === seasonNum);
-            });
-
-            renderEpisodes();
-        }
-
-        function renderEpisodes() {
-            const episodesContainer = document.getElementById('episodes');
-            episodesContainer.innerHTML = '';
-
-            const list = episodesData[currentSeason] || [];
-            list.forEach((ep, index) => {
-                const btn = document.createElement('button');
-                btn.className = 'btn' + (index === 0 ? ' active' : '');
-                btn.innerText = ep.title;
-                btn.onclick = () => {
-                    document.querySelectorAll('#episodes .btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    document.getElementById('player').src = ep.url;
-                };
-                episodesContainer.appendChild(btn);
-            });
-
-            // Автовыбор первой серии сезона
-            if (list.length > 0) {
-                document.getElementById('player').src = list[0].url;
-            }
-        }
-
-        // Инициализация при загрузке
-        renderEpisodes();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
