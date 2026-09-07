@@ -3,62 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Очень странные дела смотреть онлайн</title>
+    <title>Очень странные дела смотреть онлайн — Stranger Things</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <!-- Шапка сайта -->
     <header class="header">
-        <div class="header-container">
+        <div class="header-inner">
             <div class="logo">
-                <img src="https://via.placeholder.com/140x40/000000/ff0000?text=STRANGER+THINGS" alt="Stranger Things">
+                <span class="logo-stranger">STRANGER</span>
+                <span class="logo-things">THINGS</span>
             </div>
             <nav class="nav">
-                <a href="#" class="nav-link active">Смотреть онлайн ▾</a>
+                <a href="#" class="nav-link active">Смотреть онлайн <span class="arrow">▾</span></a>
                 <a href="#" class="nav-link">Новости</a>
-                <a href="#" class="btn-yellow">☑ Истории из 85-го</a>
+                <a href="#" class="btn-yellow-head"><span class="check">☑</span> Истории из 85-го</a>
             </nav>
         </div>
     </header>
 
-    <!-- Основной контент -->
-    <div class="main-wrapper">
-        <main class="content">
-            <h1 class="main-title">Очень странные дела смотреть онлайн</h1>
-            <p class="subtitle">Stranger Things</p>
+    <!-- Главная обертка контента -->
+    <div class="main-container">
+        
+        <!-- Левая колонка (Основной контент) -->
+        <main class="content-left">
+            <h1 class="page-title">Очень странные дела смотреть онлайн</h1>
+            <div class="original-title">Stranger Things</div>
+            
             <p class="description">
                 «Очень странные дела» — мрачная научно-фантастическая драма, которую стоит смотреть ради пугающей атмосферы и ностальгии по восьмидесятым. История повествует о приключениях детей в маленьком городе, где начинают происходить паранормальные явления.
             </p>
 
-            <!-- Переключатель сезонов (квадратные кнопки) -->
+            <!-- Сезоны -->
             <div class="season-tabs">
-                <button class="tab-btn active" data-season="1">1</button>
-                <button class="tab-btn" data-season="2">2</button>
-                <button class="tab-btn" data-season="3">3</button>
-                <button class="tab-btn" data-season="4">4</button>
-                <button class="tab-btn" data-season="5">5</button>
+                <button class="season-btn active" onclick="switchSeason(1)">1</button>
+                <button class="season-btn" onclick="switchSeason(2)">2</button>
+                <button class="season-btn" onclick="switchSeason(3)">3</button>
+                <button class="season-btn" onclick="switchSeason(4)">4</button>
+                <button class="season-btn" onclick="switchSeason(5)">5</button>
             </div>
 
-            <div class="voice-tag">LostFilm</div>
+            <!-- Озвучка -->
+            <div class="voice-badge">LostFilm</div>
 
-            <!-- Сетка карточек серий -->
+            <!-- Сетка серий -->
             <div class="episodes-grid" id="episodes-container">
-                <!-- Карточки генерируются динамически из script.js -->
+                <!-- Карточки серий подгружаются через script.js -->
             </div>
 
-            <div class="info-block">
+            <div class="text-footer">
                 <p>Впереди нас ждёт пятый сезон, который станет последним.</p>
-                <p>Создатели сериала заявили, что долгих завязок не будет и главных героев сразу забросит в гущу событий.</p>
+                <p>Создатели сериала заявили, что долгих завязок не будет и главных героев сразу забросит в гущу событий, а последняя серия будет длиной в полнометражный фильм.</p>
+                <p class="small-text">Датой премьеры пятого сезона «Очень странные дела» объявлен 2025 год, а пока вы можете бесплатно посмотреть все доступные сезоны в хорошем HD качестве на нашем сайте.</p>
             </div>
         </main>
 
-        <!-- Правый сайдбар -->
-        <aside class="sidebar">
-            <button class="bookmark-btn">★ Добавить сайт в закладки</button>
+        <!-- Правая колонка (Сайдбар) -->
+        <aside class="sidebar-right">
+            
+            <button class="bookmark-btn">
+                <span class="star">★</span> Добавить сайт в закладки
+            </button>
 
-            <div class="sidebar-widget">
-                <div class="season-links">
+            <!-- Список сезонов -->
+            <div class="sidebar-block">
+                <div class="seasons-grid">
                     <a href="#" onclick="switchSeason(1)">› 1 сезон</a>
                     <a href="#" onclick="switchSeason(2)">› 2 сезон</a>
                     <a href="#" onclick="switchSeason(3)">› 3 сезон</a>
@@ -67,30 +77,65 @@
                 </div>
             </div>
 
-            <div class="sidebar-widget">
-                <h3>До выхода серии:</h3>
+            <!-- До выхода серии -->
+            <div class="sidebar-block center-text">
+                <h3 class="widget-title">До выхода серии:</h3>
             </div>
 
-            <div class="sidebar-widget">
-                <h3>Последние 3 серии</h3>
-                <div class="mini-cards">
-                    <div class="mini-card">
-                        <!-- ВСТАВЛЯТЬ ССЫЛКУ НА СЕРИЮ СЮДА (превью) -->
-                        <img src="https://via.placeholder.com/240x120/111122/ffffff?text=Истории+из+85-го" alt="Превью">
-                        <span>Очень странные дела: Истории из 85-го ...</span>
+            <!-- Последние 3 серии -->
+            <div class="sidebar-block">
+                <h3 class="widget-title">Последние 3 серии</h3>
+                <div class="recent-episodes">
+                    
+                    <div class="recent-item">
+                        <div class="thumb-box">
+                            <!-- ВСТАВЛЯТЬ ССЫЛКУ НА ПРЕВЬЮ СЮДА -->
+                            <img src="https://via.placeholder.com/260x120/0a0a1a/ff0055?text=Poster" alt="Истории из 85-го">
+                        </div>
+                        <div class="recent-title">Очень странные дела: Истории из 85-го ...</div>
                     </div>
+
+                    <div class="recent-item">
+                        <div class="thumb-box">
+                            <!-- ВСТАВЛЯТЬ ССЫЛКУ НА ПРЕВЬЮ СЮДА -->
+                            <img src="https://via.placeholder.com/260x120/0a1a0a/00ff55?text=Poster" alt="Истории из 85-го">
+                        </div>
+                        <div class="recent-title">Очень странные дела: Истории из 85-го ...</div>
+                    </div>
+
+                    <div class="recent-item">
+                        <div class="thumb-box">
+                            <!-- ВСТАВЛЯТЬ ССЫЛКУ НА ПРЕВЬЮ СЮДА -->
+                            <img src="https://via.placeholder.com/260x120/1a0a0a/ffaa00?text=Poster" alt="Истории из 85-го">
+                        </div>
+                        <div class="recent-title">Очень странные дела: Истории из 85-го ...</div>
+                    </div>
+
                 </div>
             </div>
+
+            <!-- Что можно посмотреть -->
+            <div class="sidebar-block">
+                <h3 class="widget-title">Что можно посмотреть:</h3>
+                <div class="cast-grid">
+                    <div class="cast-thumb"><img src="https://via.placeholder.com/50x60/333/fff" alt="1"></div>
+                    <div class="cast-thumb"><img src="https://via.placeholder.com/50x60/333/fff" alt="2"></div>
+                    <div class="cast-thumb"><img src="https://via.placeholder.com/50x60/333/fff" alt="3"></div>
+                    <div class="cast-thumb"><img src="https://via.placeholder.com/50x60/333/fff" alt="4"></div>
+                    <div class="cast-thumb"><img src="https://via.placeholder.com/50x60/333/fff" alt="5"></div>
+                </div>
+            </div>
+
         </aside>
     </div>
 
-    <!-- Модальное окно с видеоплеером -->
-    <div class="modal" id="player-modal">
-        <div class="modal-content">
-            <span class="close-modal" id="close-modal">&times;</span>
-            <div class="iframe-container">
-                <!-- ВСТАВЛЯТЬ ССЫЛКУ НА СЕРИЮ СЮДА (автоматически подставляется скриптом в src) -->
-                <iframe id="video-iframe" src="" allowfullscreen></iframe>
+    <!-- Модальное окно плеера -->
+    <div class="player-modal" id="modal-player">
+        <div class="modal-body">
+            <span class="close-btn" id="modal-close">&times;</span>
+            <div class="iframe-wrapper">
+                <!-- ВСТАВЛЯТЬ ССЫЛКУ НА СЕРИЮ СЮДА (подставляется через script.js в src) -->
+                <iframe id="video-frame" src="" allowfullscreen></iframe>
             </div>
         </div>
     </div>
