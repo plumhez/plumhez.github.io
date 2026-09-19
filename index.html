@@ -1,145 +1,658 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Очень странные дела смотреть онлайн — Stranger Things</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <title>Pixel Canvas App</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#09090b',
+                        darkPanel: '#121212',
+                        darkCard: '#1e1e1e',
+                        darkBorder: '#27272a',
+                        darkHover: '#3f3f46'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            touch-action: manipulation;
+            user-select: none;
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
 
-    <!-- Шапка сайта -->
-    <header class="header">
-        <div class="header-inner">
-            <div class="logo">
-                <span class="logo-stranger">STRANGER</span>
-                <span class="logo-things">THINGS</span>
+        /* Custom Scrollbar for Color Palette */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 6px;
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d4d4d8;
+            border-radius: 3px;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #3f3f46;
+        }
+
+        /* Color Tile Styles */
+        .palette-color {
+            transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        .palette-color:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+        .palette-color.selected {
+            border-color: #000000 !important;
+            transform: scale(1.15);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 20;
+        }
+        .dark .palette-color.selected {
+            border-color: #ffffff !important;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+        }
+
+        /* Canvas viewport shadow */
+        #canvas-wrapper {
+            transition: background-color 0.25s ease, border-color 0.25s ease;
+        }
+
+        #canvas-container {
+            cursor: crosshair;
+            background-color: #f4f4f5;
+            transition: background-color 0.25s ease;
+        }
+
+        .dark #canvas-container {
+            background-color: #000000 !important;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col justify-between overflow-hidden bg-gray-50 text-gray-900 dark:bg-[#09090b] dark:text-gray-100 transition-colors">
+
+    <!-- Header -->
+    <header class="flex items-center justify-between px-4 py-3 bg-white border-b border-gray-200 dark:bg-[#121212] dark:border-[#27272a] transition-colors shadow-sm">
+        <div class="flex items-center space-x-3">
+            <h1 class="text-base sm:text-lg font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-2">
+                <i class="fa-solid fa-border-all text-neutral-800 dark:text-neutral-200"></i>
+                <span>Pixel Canvas</span>
+            </h1>
+            <button id="share-btn" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-[#1e1e1e] dark:hover:bg-[#27272a] dark:text-gray-300 px-3 py-1 rounded-full border border-gray-200 dark:border-[#27272a] flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-share-nodes"></i> Поделиться
+            </button>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <!-- Realtime Online Counter Badge -->
+            <div id="online-counter" class="text-xs font-semibold px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-800/40 flex items-center gap-2 shadow-sm" title="Настоящий онлайн">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span id="online-count-text">1 Онлайн</span>
             </div>
-            <nav class="nav">
-                <a href="#" class="nav-link active">Смотреть онлайн <span class="arrow">▾</span></a>
-                <a href="#" class="nav-link">Новости</a>
-                <a href="#" class="btn-yellow-head"><span class="check">☑</span> Истории из 85-го</a>
-            </nav>
+
+            <!-- Theme Switcher -->
+            <button id="theme-toggle-btn" class="w-9 h-9 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-[#1e1e1e] dark:hover:bg-[#27272a] text-gray-700 dark:text-yellow-400 flex items-center justify-center border border-gray-200 dark:border-[#27272a] transition" title="Переключить тему">
+                <i id="theme-icon" class="fa-solid fa-moon text-sm"></i>
+            </button>
         </div>
     </header>
 
-    <!-- Главная обертка контента -->
-    <div class="main-container">
+    <!-- Main Canvas Viewport -->
+    <main class="flex-1 flex flex-col items-center justify-center p-2 sm:p-4 overflow-hidden relative bg-gray-100 dark:bg-[#000000] transition-colors">
         
-        <!-- Левая колонка (Основной контент) -->
-        <main class="content-left">
-            <h1 class="page-title">Очень странные дела смотреть онлайн</h1>
-            <div class="original-title">Stranger Things</div>
-            
-            <p class="description">
-                «Очень странные дела» — мрачная научно-фантастическая драма, которую стоит смотреть ради пугающей атмосферы и ностальгии по восьмидесятым. История повествует о приключениях детей в маленьком городе, где начинают происходить паранормальные явления.
-            </p>
-
-            <!-- Сезоны -->
-            <div class="season-tabs">
-                <button class="season-btn active" onclick="switchSeason(1)">1</button>
-                <button class="season-btn" onclick="switchSeason(2)">2</button>
-                <button class="season-btn" onclick="switchSeason(3)">3</button>
-                <button class="season-btn" onclick="switchSeason(4)">4</button>
-                <button class="season-btn" onclick="switchSeason(5)">5</button>
-            </div>
-
-            <!-- Озвучка -->
-            <div class="voice-badge">LostFilm</div>
-
-            <!-- Сетка серий -->
-            <div class="episodes-grid" id="episodes-container">
-                <!-- Карточки серий подгружаются через script.js -->
-            </div>
-
-            <div class="text-footer">
-                <p>Впереди нас ждёт пятый сезон, который станет последним.</p>
-                <p>Создатели сериала заявили, что долгих завязок не будет и главных героев сразу забросит в гущу событий, а последняя серия будет длиной в полнометражный фильм.</p>
-                <p class="small-text">Датой премьеры пятого сезона «Очень странные дела» объявлен 2025 год, а пока вы можете бесплатно посмотреть все доступные сезоны в хорошем HD качестве на нашем сайте.</p>
-            </div>
-        </main>
-
-        <!-- Правая колонка (Сайдбар) -->
-        <aside class="sidebar-right">
-            
-            <button class="bookmark-btn">
-                <span class="star">★</span> Добавить сайт в закладки
-            </button>
-
-            <!-- Список сезонов -->
-            <div class="sidebar-block">
-                <div class="seasons-grid">
-                    <a href="#" onclick="switchSeason(1)">› 1 сезон</a>
-                    <a href="#" onclick="switchSeason(2)">› 2 сезон</a>
-                    <a href="#" onclick="switchSeason(3)">› 3 сезон</a>
-                    <a href="#" onclick="switchSeason(4)">› 4 сезон</a>
-                    <a href="#" onclick="switchSeason(5)">› 5 сезон</a>
+        <div class="relative w-full max-w-2xl flex-1 flex flex-col items-center justify-center min-h-0">
+            <div id="canvas-wrapper" class="relative border border-gray-300 dark:border-[#27272a] rounded-2xl overflow-hidden bg-gray-200 dark:bg-[#0a0a0a] flex items-center justify-center w-full h-full max-h-[540px] shadow-sm">
+                
+                <!-- Canvas Container -->
+                <div id="canvas-container" class="w-full h-full relative overflow-hidden flex items-center justify-center bg-gray-200 dark:bg-[#000000]">
+                    <canvas id="pixelCanvas" class="block rounded shadow-inner"></canvas>
                 </div>
-            </div>
 
-            <!-- До выхода серии -->
-            <div class="sidebar-block center-text">
-                <h3 class="widget-title">До выхода серии:</h3>
-            </div>
-
-            <!-- Последние 3 серии -->
-            <div class="sidebar-block">
-                <h3 class="widget-title">Последние 3 серии</h3>
-                <div class="recent-episodes">
-                    
-                    <div class="recent-item">
-                        <div class="thumb-box">
-                            <!-- ВСТАВЛЯТЬ ССЫЛКУ НА ПРЕВЬЮ СЮДА -->
-                            <img src="https://via.placeholder.com/260x120/0a0a1a/ff0055?text=Poster" alt="Истории из 85-го">
-                        </div>
-                        <div class="recent-title">Очень странные дела: Истории из 85-го ...</div>
-                    </div>
-
-                    <div class="recent-item">
-                        <div class="thumb-box">
-                            <!-- ВСТАВЛЯТЬ ССЫЛКУ НА ПРЕВЬЮ СЮДА -->
-                            <img src="https://via.placeholder.com/260x120/0a1a0a/00ff55?text=Poster" alt="Истории из 85-го">
-                        </div>
-                        <div class="recent-title">Очень странные дела: Истории из 85-го ...</div>
-                    </div>
-
-                    <div class="recent-item">
-                        <div class="thumb-box">
-                            <!-- ВСТАВЛЯТЬ ССЫЛКУ НА ПРЕВЬЮ СЮДА -->
-                            <img src="https://via.placeholder.com/260x120/1a0a0a/ffaa00?text=Poster" alt="Истории из 85-го">
-                        </div>
-                        <div class="recent-title">Очень странные дела: Истории из 85-го ...</div>
-                    </div>
-
+                <!-- Floating Canvas Zoom & View Controls -->
+                <div class="absolute bottom-3 right-3 flex items-center bg-white/90 dark:bg-[#121212]/90 backdrop-blur border border-gray-200 dark:border-[#27272a] rounded-xl p-1 space-x-1 shadow-md z-10">
+                    <button id="zoom-out" class="w-8 h-8 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#1e1e1e] rounded-lg transition" title="Уменьшить">
+                        <i class="fa-solid fa-minus text-xs"></i>
+                    </button>
+                    <span id="zoom-level" class="text-xs font-mono font-medium text-gray-700 dark:text-gray-300 px-2 select-none">100%</span>
+                    <button id="zoom-in" class="w-8 h-8 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#1e1e1e] rounded-lg transition" title="Увеличить">
+                        <i class="fa-solid fa-plus text-xs"></i>
+                    </button>
+                    <div class="h-4 w-px bg-gray-200 dark:bg-[#27272a] mx-1"></div>
+                    <button id="grid-toggle" class="w-8 h-8 flex items-center justify-center text-neutral-900 dark:text-white hover:bg-gray-100 dark:hover:bg-[#1e1e1e] rounded-lg transition" title="Сетка">
+                        <i class="fa-solid fa-border-top-left text-xs"></i>
+                    </button>
+                    <button id="reset-view" class="w-8 h-8 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#1e1e1e] rounded-lg transition" title="Сбросить вид">
+                        <i class="fa-solid fa-rotate text-xs"></i>
+                    </button>
                 </div>
-            </div>
 
-            <!-- Что можно посмотреть -->
-            <div class="sidebar-block">
-                <h3 class="widget-title">Что можно посмотреть:</h3>
-                <div class="cast-grid">
-                    <div class="cast-thumb"><img src="https://via.placeholder.com/50x60/333/fff" alt="1"></div>
-                    <div class="cast-thumb"><img src="https://via.placeholder.com/50x60/333/fff" alt="2"></div>
-                    <div class="cast-thumb"><img src="https://via.placeholder.com/50x60/333/fff" alt="3"></div>
-                    <div class="cast-thumb"><img src="https://via.placeholder.com/50x60/333/fff" alt="4"></div>
-                    <div class="cast-thumb"><img src="https://via.placeholder.com/50x60/333/fff" alt="5"></div>
+                <!-- Coordinate Display -->
+                <div id="coords-display" class="absolute top-3 left-3 bg-white/90 dark:bg-[#121212]/90 backdrop-blur px-3 py-1 rounded-lg border border-gray-200 dark:border-[#27272a] text-xs font-mono text-gray-700 dark:text-gray-300 pointer-events-none shadow-sm">
+                    X: -- | Y: --
                 </div>
-            </div>
-
-        </aside>
-    </div>
-
-    <!-- Модальное окно плеера -->
-    <div class="player-modal" id="modal-player">
-        <div class="modal-body">
-            <span class="close-btn" id="modal-close">&times;</span>
-            <div class="iframe-wrapper">
-                <!-- ВСТАВЛЯТЬ ССЫЛКУ НА СЕРИЮ СЮДА (подставляется через script.js в src) -->
-                <iframe id="video-frame" src="" allowfullscreen></iframe>
             </div>
         </div>
-    </div>
 
-    <script src="script.js"></script>
+    </main>
+
+    <!-- Footer / Color Palette & Action Bar -->
+    <footer class="bg-white border-t border-gray-200 dark:bg-[#121212] dark:border-[#27272a] px-4 py-3 flex flex-col items-center justify-center space-y-3 z-20 transition-colors">
+        
+        <p id="instruction-text" class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 font-medium tracking-wide">
+            Выберите пиксель на холсте
+        </p>
+
+        <!-- Color Palette Grid -->
+        <div id="palette-container" class="grid grid-rows-3 grid-flow-col gap-1.5 sm:gap-2 max-w-full overflow-x-auto p-1 custom-scrollbar">
+            <!-- Palette boxes generated via JavaScript -->
+        </div>
+
+        <!-- Action Control Button -->
+        <div class="w-full max-w-md flex items-center">
+            <button id="confirm-btn" disabled class="relative overflow-hidden w-full py-3 px-6 rounded-xl bg-gray-200 dark:bg-[#1e1e1e] text-gray-400 dark:text-gray-500 font-semibold text-sm sm:text-base tracking-wide shadow flex items-center justify-center space-x-2 disabled:cursor-not-allowed">
+                <!-- Cooldown progress bar -->
+                <div id="cooldown-progress" class="absolute inset-0 bg-neutral-900/15 dark:bg-white/20 w-0 transition-all duration-75 ease-linear pointer-events-none"></div>
+                <span id="confirm-btn-text" class="relative z-10">Выберите пиксель</span>
+            </button>
+        </div>
+
+        <!-- Status Notification Toast -->
+        <div id="toast-message" class="text-xs text-gray-500 dark:text-gray-400 h-4 font-mono transition-opacity duration-300 opacity-100">
+            Холст готов к работе.
+        </div>
+    </footer>
+
+    <!-- Firebase JS SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Configuration Setup
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'pixel-canvas-app';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+
+        let auth = null;
+        let db = null;
+        let currentUser = null;
+        let activeUsersMap = new Map();
+
+        const onlineCountText = document.getElementById('online-count-text');
+
+        // Local BroadcastChannel for counting multiple open tabs on the same device
+        const localPresenceChannel = new BroadcastChannel('pixel_canvas_presence');
+        const tabId = Math.random().toString(36).substring(2, 9);
+        let knownLocalTabs = new Set([tabId]);
+
+        function updateOnlineDisplay() {
+            // Combine remote Firestore active sessions with local tab sessions
+            const totalOnline = Math.max(activeUsersMap.size, knownLocalTabs.size, 1);
+            onlineCountText.innerText = `${totalOnline} ${getOnlineNoun(totalOnline)}`;
+        }
+
+        function getOnlineNoun(number) {
+            let n = Math.abs(number);
+            n %= 100;
+            if (n >= 5 && n <= 20) return 'Онлайн';
+            n %= 10;
+            if (n === 1) return 'Онлайн';
+            if (n >= 2 && n <= 4) return 'Онлайн';
+            return 'Онлайн';
+        }
+
+        // Local Tab Broadcasting
+        localPresenceChannel.postMessage({ type: 'PING_TAB', tabId });
+        localPresenceChannel.onmessage = (event) => {
+            if (event.data.type === 'PING_TAB') {
+                knownLocalTabs.add(event.data.tabId);
+                localPresenceChannel.postMessage({ type: 'PONG_TAB', tabId });
+                updateOnlineDisplay();
+            } else if (event.data.type === 'PONG_TAB') {
+                knownLocalTabs.add(event.data.tabId);
+                updateOnlineDisplay();
+            } else if (event.data.type === 'LEAVE_TAB') {
+                knownLocalTabs.delete(event.data.tabId);
+                updateOnlineDisplay();
+            }
+        };
+
+        window.addEventListener('beforeunload', () => {
+            localPresenceChannel.postMessage({ type: 'LEAVE_TAB', tabId });
+        });
+
+        // Initialize Realtime Firebase Presence
+        async function initRealtimePresence() {
+            if (!firebaseConfig) {
+                updateOnlineDisplay();
+                return;
+            }
+
+            try {
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                // Authenticate
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                currentUser = auth.currentUser;
+                if (!currentUser) return;
+
+                const presenceDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'presence', currentUser.uid);
+
+                // Register online presence
+                await setDoc(presenceDocRef, {
+                    lastSeen: Date.now(),
+                    uid: currentUser.uid
+                });
+
+                // Heartbeat to keep presence active
+                setInterval(async () => {
+                    if (currentUser) {
+                        await setDoc(presenceDocRef, {
+                            lastSeen: Date.now(),
+                            uid: currentUser.uid
+                        }, { merge: true });
+                    }
+                }, 10000);
+
+                // Remove presence on window unload
+                window.addEventListener('beforeunload', () => {
+                    deleteDoc(presenceDocRef);
+                });
+
+                // Listen to online presence collection
+                const presenceColRef = collection(db, 'artifacts', appId, 'public', 'data', 'presence');
+                onSnapshot(presenceColRef, (snapshot) => {
+                    const now = Date.now();
+                    activeUsersMap.clear();
+                    
+                    snapshot.forEach(docSnap => {
+                        const data = docSnap.data();
+                        // Consider active if updated within last 30 seconds
+                        if (data.lastSeen && (now - data.lastSeen < 30000)) {
+                            activeUsersMap.set(docSnap.id, true);
+                        }
+                    });
+
+                    updateOnlineDisplay();
+                }, (error) => {
+                    console.warn("Presence snapshot listener:", error);
+                    updateOnlineDisplay();
+                });
+
+            } catch (err) {
+                console.warn("Realtime presence fallback initialized:", err);
+                updateOnlineDisplay();
+            }
+        }
+
+        initRealtimePresence();
+    </script>
+
+    <script>
+        const GRID_SIZE = 64; // 64x64 grid
+        const COOLDOWN_TIME_MS = 2000; // 2 seconds delay
+
+        // Vibrant Color Palette
+        const COLOR_PALETTE = [
+            "#FF3B30", "#FF9500", "#FFCC00", "#34C759", "#00C7BE", "#30B0C7", "#32ADE6", "#007AFF", "#5856D6",
+            "#AF52DE", "#FF2D55", "#A2845E", "#8E8E93", "#000000", "#FFFFFF", "#FF6464", "#FFB340", "#FFE169",
+            "#70E000", "#38B000", "#0077B6", "#03045E", "#7209B7", "#F72585", "#4A4E69", "#9A8C98", "#C9ADA7",
+            "#F2E9E4", "#DDA15E", "#BC6C25", "#606C38", "#283618", "#14213D", "#E63946", "#F1FAEE", "#A8DADC"
+        ];
+
+        // Canvas element setup
+        const canvas = document.getElementById('pixelCanvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('canvas-container');
+
+        // Application State
+        let gridData = new Array(GRID_SIZE * GRID_SIZE).fill("#FFFFFF"); // Default initial state: ALL WHITE
+        let selectedColor = COLOR_PALETTE[0]; // Red default
+        let selectedPixel = null;
+        let scale = 1;
+        let panX = 0;
+        let panY = 0;
+        let showGrid = true;
+        let lastPlacementTime = 0;
+
+        // UI References
+        const paletteContainer = document.getElementById('palette-container');
+        const confirmBtn = document.getElementById('confirm-btn');
+        const confirmBtnText = document.getElementById('confirm-btn-text');
+        const cooldownProgress = document.getElementById('cooldown-progress');
+        const instructionText = document.getElementById('instruction-text');
+        const toastMessage = document.getElementById('toast-message');
+        const zoomLevelText = document.getElementById('zoom-level');
+        const coordsDisplay = document.getElementById('coords-display');
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const themeIcon = document.getElementById('theme-icon');
+
+        // Theme Management
+        function initTheme() {
+            const savedTheme = localStorage.getItem('pixel_theme_mode');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+                themeIcon.className = 'fa-solid fa-sun text-sm';
+            } else {
+                document.documentElement.classList.remove('dark');
+                themeIcon.className = 'fa-solid fa-moon text-sm';
+            }
+        }
+
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('pixel_theme_mode', 'light');
+                themeIcon.className = 'fa-solid fa-moon text-sm';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('pixel_theme_mode', 'dark');
+                themeIcon.className = 'fa-solid fa-sun text-sm';
+            }
+            render();
+        }
+
+        // Canvas Data Persistence
+        function loadCanvasState() {
+            try {
+                const savedData = localStorage.getItem('pixel_art_canvas_state_white');
+                if (savedData) {
+                    const parsed = JSON.parse(savedData);
+                    if (Array.isArray(parsed) && parsed.length === GRID_SIZE * GRID_SIZE) {
+                        gridData = parsed;
+                    }
+                } else {
+                    gridData = new Array(GRID_SIZE * GRID_SIZE).fill("#FFFFFF");
+                }
+            } catch (e) {
+                gridData = new Array(GRID_SIZE * GRID_SIZE).fill("#FFFFFF");
+            }
+        }
+
+        function saveCanvasState() {
+            try {
+                localStorage.setItem('pixel_art_canvas_state_white', JSON.stringify(gridData));
+            } catch (e) {
+                console.warn('LocalStorage save failed:', e);
+            }
+        }
+
+        // Initialize Color Palette
+        function initPalette() {
+            paletteContainer.innerHTML = '';
+            COLOR_PALETTE.forEach((color, index) => {
+                const colorBox = document.createElement('button');
+                colorBox.className = `palette-color w-7 h-7 sm:w-8 sm:h-8 rounded-lg border border-gray-300 dark:border-[#27272a] flex-shrink-0 focus:outline-none ${index === 0 ? 'selected' : ''}`;
+                colorBox.style.backgroundColor = color;
+                colorBox.dataset.color = color;
+                
+                colorBox.addEventListener('click', () => {
+                    document.querySelectorAll('.palette-color').forEach(el => el.classList.remove('selected'));
+                    colorBox.classList.add('selected');
+                    selectedColor = color;
+                    showToast(`Выбран цвет: ${color}`);
+                    render();
+                });
+
+                paletteContainer.appendChild(colorBox);
+            });
+        }
+
+        function setupCanvasSize() {
+            const rect = container.getBoundingClientRect();
+            const minDim = Math.min(rect.width, rect.height) - 12;
+            canvas.width = Math.max(minDim, 320);
+            canvas.height = Math.max(minDim, 320);
+            render();
+        }
+
+        // Render Canvas
+        function render() {
+            const width = canvas.width;
+            const height = canvas.height;
+            const cellSize = (width / GRID_SIZE) * scale;
+            const isDark = document.documentElement.classList.contains('dark');
+
+            // Canvas Background Container Rendering (Strict Pure Black/Gray Mode)
+            ctx.fillStyle = isDark ? "#000000" : "#f4f4f5";
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.save();
+            ctx.translate(panX, panY);
+
+            // Draw Grid Pixels
+            for (let y = 0; y < GRID_SIZE; y++) {
+                for (let x = 0; x < GRID_SIZE; x++) {
+                    const color = gridData[y * GRID_SIZE + x];
+                    ctx.fillStyle = color;
+                    ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+                }
+            }
+
+            // Draw Grid Lines
+            if (showGrid && cellSize > 4) {
+                ctx.strokeStyle = isDark ? "rgba(255, 255, 255, 0.12)" : "rgba(0, 0, 0, 0.08)";
+                ctx.lineWidth = 0.5;
+
+                for (let i = 0; i <= GRID_SIZE; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(i * cellSize, 0);
+                    ctx.lineTo(i * cellSize, GRID_SIZE * cellSize);
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.moveTo(0, i * cellSize);
+                    ctx.lineTo(GRID_SIZE * cellSize, i * cellSize);
+                    ctx.stroke();
+                }
+            }
+
+            // Highlight Currently Selected Pixel
+            if (selectedPixel) {
+                const px = selectedPixel.x * cellSize;
+                const py = selectedPixel.y * cellSize;
+
+                ctx.fillStyle = selectedColor;
+                ctx.fillRect(px, py, cellSize, cellSize);
+
+                ctx.strokeStyle = isDark ? "#FFFFFF" : "#000000";
+                ctx.lineWidth = Math.max(1.5, cellSize * 0.12);
+                ctx.strokeRect(px, py, cellSize, cellSize);
+            }
+
+            ctx.restore();
+        }
+
+        function getGridCoordinates(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+
+            if (clientX === undefined || clientY === undefined) return null;
+
+            const mouseX = clientX - rect.left - panX;
+            const mouseY = clientY - rect.top - panY;
+
+            const cellSize = (canvas.width / GRID_SIZE) * scale;
+            const x = Math.floor(mouseX / cellSize);
+            const y = Math.floor(mouseY / cellSize);
+
+            if (x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE) {
+                return { x, y };
+            }
+            return null;
+        }
+
+        // Cooldown Calculation
+        function checkCooldown() {
+            const now = Date.now();
+            const elapsed = now - lastPlacementTime;
+            return elapsed < COOLDOWN_TIME_MS ? COOLDOWN_TIME_MS - elapsed : 0;
+        }
+
+        // Button Cooldown State Update
+        function updateConfirmButtonState() {
+            const remaining = checkCooldown();
+
+            if (remaining > 0) {
+                confirmBtn.disabled = true;
+                confirmBtn.className = "relative overflow-hidden flex-1 py-3 px-6 rounded-xl bg-gray-200 dark:bg-[#1e1e1e] text-gray-500 dark:text-gray-400 font-semibold text-sm sm:text-base tracking-wide shadow flex items-center justify-center space-x-2 disabled:cursor-not-allowed transition";
+                
+                const seconds = (remaining / 1000).toFixed(1);
+                confirmBtnText.innerText = `Ждите ${seconds}с`;
+                
+                const progressPct = ((COOLDOWN_TIME_MS - remaining) / COOLDOWN_TIME_MS) * 100;
+                cooldownProgress.style.width = `${progressPct}%`;
+            } else {
+                cooldownProgress.style.width = '0%';
+                
+                if (selectedPixel) {
+                    confirmBtn.disabled = false;
+                    confirmBtn.className = "relative overflow-hidden flex-1 py-3 px-6 rounded-xl bg-black hover:bg-neutral-800 dark:bg-white dark:hover:bg-neutral-200 text-white dark:text-black font-semibold text-sm sm:text-base tracking-wide shadow-md flex items-center justify-center space-x-2 transition cursor-pointer";
+                    confirmBtnText.innerText = 'Поставить пиксель';
+                } else {
+                    confirmBtn.disabled = true;
+                    confirmBtn.className = "relative overflow-hidden flex-1 py-3 px-6 rounded-xl bg-gray-200 dark:bg-[#1e1e1e] text-gray-400 dark:text-gray-500 font-semibold text-sm sm:text-base tracking-wide shadow flex items-center justify-center space-x-2 disabled:cursor-not-allowed transition";
+                    confirmBtnText.innerText = 'Выберите пиксель';
+                }
+            }
+        }
+
+        // Apply Pixel Action
+        function applyPixel() {
+            const remaining = checkCooldown();
+            if (remaining > 0) {
+                showToast(`Подождите еще ${Math.ceil(remaining / 1000)}с!`);
+                return;
+            }
+
+            if (!selectedPixel) {
+                showToast("Сначала нажмите на пиксель на холсте!");
+                return;
+            }
+
+            const index = selectedPixel.y * GRID_SIZE + selectedPixel.x;
+            gridData[index] = selectedColor;
+
+            lastPlacementTime = Date.now();
+            saveCanvasState();
+            showToast(`Пиксель установлен на (${selectedPixel.x + 1}, ${selectedPixel.y + 1})!`);
+
+            selectedPixel = null;
+            instructionText.innerText = "Пиксель поставлен! Выберите следующий.";
+
+            render();
+            updateConfirmButtonState();
+        }
+
+        function showToast(text) {
+            toastMessage.innerText = text;
+            toastMessage.classList.remove('opacity-0');
+            toastMessage.classList.add('opacity-100');
+        }
+
+        function initEvents() {
+            window.addEventListener('resize', setupCanvasSize);
+
+            // Canvas Click Selection
+            canvas.addEventListener('click', (e) => {
+                const coords = getGridCoordinates(e);
+                if (coords) {
+                    selectedPixel = coords;
+                    instructionText.innerText = `Выбран пиксель: (${coords.x + 1}, ${coords.y + 1})`;
+                    render();
+                    updateConfirmButtonState();
+                }
+            });
+
+            // Mouse hover coordinates
+            canvas.addEventListener('mousemove', (e) => {
+                const coords = getGridCoordinates(e);
+                if (coords) {
+                    coordsDisplay.innerText = `X: ${coords.x + 1} | Y: ${coords.y + 1}`;
+                } else {
+                    coordsDisplay.innerText = `X: -- | Y: --`;
+                }
+            });
+
+            confirmBtn.addEventListener('click', applyPixel);
+            themeToggleBtn.addEventListener('click', toggleTheme);
+
+            // Zoom Handlers
+            document.getElementById('zoom-in').addEventListener('click', () => {
+                if (scale < 3.5) {
+                    scale += 0.25;
+                    zoomLevelText.innerText = `${Math.round(scale * 100)}%`;
+                    render();
+                }
+            });
+
+            document.getElementById('zoom-out').addEventListener('click', () => {
+                if (scale > 0.75) {
+                    scale -= 0.25;
+                    zoomLevelText.innerText = `${Math.round(scale * 100)}%`;
+                    render();
+                }
+            });
+
+            document.getElementById('reset-view').addEventListener('click', () => {
+                scale = 1;
+                panX = 0;
+                panY = 0;
+                zoomLevelText.innerText = `100%`;
+                render();
+            });
+
+            document.getElementById('grid-toggle').addEventListener('click', function() {
+                showGrid = !showGrid;
+                this.classList.toggle('text-neutral-900');
+                this.classList.toggle('dark:text-white');
+                this.classList.toggle('text-gray-400');
+                render();
+            });
+
+            document.getElementById('share-btn').addEventListener('click', () => {
+                showToast("Ссылка на холст скопирована в буфер!");
+            });
+
+            // Ticker loop for continuous smooth cooldown progress bar update
+            setInterval(updateConfirmButtonState, 40);
+        }
+
+        window.onload = function() {
+            initTheme();
+            loadCanvasState();
+            initPalette();
+            setupCanvasSize();
+            initEvents();
+            updateConfirmButtonState();
+        };
+    </script>
 </body>
 </html>
