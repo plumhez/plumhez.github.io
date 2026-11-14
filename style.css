@@ -23,41 +23,6 @@ body {
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8);
 }
 
-/* Стили шапки с аватаркой */
-.post-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-    padding: 0 2px;
-}
-
-.channel-avatar {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    object-fit: cover;
-    /* Пиксельный арт без сглаживания, чтобы сохранить майнкрафтовский вайб */
-    image-rendering: pixelated; 
-}
-
-.channel-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.channel-name {
-    font-weight: 500;
-    font-size: 14px;
-    color: #ffffff;
-}
-
-.post-time {
-    font-size: 11px;
-    color: #8e9aaf;
-}
-
 .qr-wrapper {
     background-color: #ffffff;
     border-radius: 8px;
@@ -80,6 +45,12 @@ body {
     line-height: 1.45;
     word-break: break-all;
     padding: 0 4px;
+}
+
+.post-title {
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #ffffff;
 }
 
 .post-subtitle {
