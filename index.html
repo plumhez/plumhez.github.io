@@ -3,75 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Telegram Post</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            /* Глубокий черный фон с легким сине-фиолетовым градиентом в стиле ТГ */
-            background-color: #08080a;
-            background-image: radial-gradient(circle at 50% 35%, #180e29 0%, #08080a 75%);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            color: #f5f5f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .tg-post {
-            background-color: #18222d; /* Фирменный цвет сообщения Telegram Dark */
-            border-radius: 12px;
-            width: 380px;
-            padding: 12px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8);
-        }
-        .qr-wrapper {
-            background-color: #ffffff;
-            border-radius: 8px;
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-        .qr-wrapper canvas {
-            display: block;
-            width: 100% !important;
-            height: auto !important;
-            border-radius: 4px;
-        }
-        .post-content {
-            font-size: 14px;
-            line-height: 1.45;
-            word-break: break-all;
-            padding: 0 4px;
-        }
-        .post-title {
-            font-weight: 500;
-            margin-bottom: 6px;
-            color: #ffffff;
-        }
-        .post-subtitle {
-            color: #b1c3d4;
-            margin-bottom: 8px;
-        }
-        .post-link {
-            color: #5288c1; /* Фирменный синий цвет ссылок в Telegram */
-            text-decoration: none;
-            display: block;
-        }
-        .post-link:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="tg-post">
         <div class="qr-wrapper">
-            <!-- Сюда скрипт автоматически внедрит QR-код -->
             <canvas id="qr-code"></canvas>
         </div>
         <div class="post-content">
@@ -81,17 +18,8 @@
         </div>
     </div>
 
-    <!-- Библиотека для генерации QR-кода на лету -->
+    <!-- Библиотека для генерации QR-кода -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-    <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            new QRious({
-                element: document.getElementById('qr-code'),
-                value: 'https://xray.abvpn.ru/vless/1f998909-c1b7-4713-8df9-90050e300cb2/8824646835.json#abvpn',
-                size: 300,
-                level: 'H'
-            });
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
