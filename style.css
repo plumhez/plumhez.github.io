@@ -13,17 +13,19 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    min-height: 100dvh; /* Учитывает панели браузера на телефонах */
+    padding: 16px;
 }
 
 .tg-post {
     background-color: #18222d;
-    border-radius: 12px;
-    width: 380px;
+    border-radius: 14px;
+    width: 100%;
+    max-width: 380px;
     padding: 12px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8);
 }
 
-/* Стили шапки с аватаркой */
 .post-header {
     display: flex;
     align-items: center;
@@ -37,19 +39,24 @@ body {
     height: 38px;
     border-radius: 50%;
     object-fit: cover;
-    image-rendering: pixelated; /* Сохраняет майнкрафтовские пиксели четкими */
+    image-rendering: pixelated;
+    flex-shrink: 0;
 }
 
 .channel-info {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    min-width: 0;
 }
 
 .channel-name {
     font-weight: 500;
     font-size: 14px;
     color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .post-time {
@@ -59,7 +66,7 @@ body {
 
 .qr-wrapper {
     background-color: #ffffff;
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 10px;
     display: flex;
     justify-content: center;
@@ -83,7 +90,7 @@ body {
 
 .post-subtitle {
     color: #b1c3d4;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .post-link {
@@ -94,4 +101,25 @@ body {
 
 .post-link:hover {
     text-decoration: underline;
+}
+
+/* Адаптация под маленькие экраны телефонов */
+@media (max-width: 420px) {
+    body {
+        padding: 12px;
+    }
+    .tg-post {
+        padding: 10px;
+        border-radius: 12px;
+    }
+    .channel-avatar {
+        width: 34px;
+        height: 34px;
+    }
+    .channel-name {
+        font-size: 13.5px;
+    }
+    .post-content {
+        font-size: 13.5px;
+    }
 }
