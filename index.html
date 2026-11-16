@@ -2,15 +2,15 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Plumhez VPN</title>
-    <!-- Иконка во вкладке браузера -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Post</title>
     <link rel="icon" type="image/png" href="pig.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="tg-post">
-        <!-- Шапка поста: аватарка-свинья и название канала -->
+        <!-- Шапка поста -->
         <div class="post-header">
             <img src="pig.png" alt="Pig Logo" class="channel-avatar">
             <div class="channel-info">
@@ -19,7 +19,7 @@
             </div>
         </div>
 
-        <!-- Сам QR-код -->
+        <!-- QR-код -->
         <div class="qr-wrapper">
             <canvas id="qr-code"></canvas>
         </div>
@@ -31,7 +31,6 @@
         </div>
     </div>
 
-    <!-- Библиотека генерации QR -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
     <script src="script.js"></script>
 </body>
